@@ -15,6 +15,7 @@ interface Lead {
   interested_course?: string;
   source: string;
   status: string;
+  member_type?: string;
   remark?: string;
   created_at: string;
 }
@@ -52,7 +53,8 @@ export default function Leads() {
       '微信': lead.wechat || '-',
       '意向课程': lead.interested_course || '-',
       '来源': lead.source,
-      '状态': lead.status === 'new' ? '新线索' : lead.status,
+      '类型': lead.member_type === 'old_paid' ? '老会员' : '新线索',
+      '状态': lead.status === 'new' ? '待处理' : lead.status,
       '备注': lead.remark || '-',
       '提交时间': new Date(lead.created_at).toLocaleString('zh-CN'),
     }));
@@ -129,11 +131,22 @@ export default function Leads() {
                     <td className="px-6 py-4">{lead.interested_course || '-'}</td>
                     <td className="px-6 py-4">{lead.source}</td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        lead.status === 'new' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {lead.status === 'new' ? '新线索' : lead.status}
-                      </span>
+                      <div className="flex flex-col gap-1 items-start">
+                        {lead.member_type === 'old_paid' ? (
+                          <span className="px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-800 border border-amber-200 font-medium">
+                            老会员
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-full text-xs bg-green-50 text-green-700 border border-green-200">
+                            新线索
+                          </span>
+                        )}
+                        <span className={`px-2 py-0.5 rounded-full text-xs ${
+                          lead.status === 'new' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {lead.status === 'new' ? '待处理' : lead.status}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 ))
