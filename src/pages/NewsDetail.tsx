@@ -10,7 +10,6 @@ import { SEO } from '../components/SEO';
 interface Article {
   id: string;
   title: string;
-  summary: string;
   content: string;
   cover_image: string;
   created_at: string;

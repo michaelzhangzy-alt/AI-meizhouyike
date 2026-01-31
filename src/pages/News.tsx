@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { Card } from '../components/ui/card';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { SEO } from '../components/SEO';
@@ -40,10 +42,11 @@ export default function News() {
   }, []);
 
   return (
-    <div className="bg-gray-50 min-h-full">
+    <div className="min-h-screen bg-gray-50">
       <SEO title="AI 资讯" description="关注人工智能前沿动态与学员精彩案例" />
+      <Navbar />
       
-      <div className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">AI 行业资讯</h1>
           <p className="text-xl text-gray-600">关注人工智能前沿动态与学员精彩案例</p>
@@ -84,7 +87,9 @@ export default function News() {
             ))}
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

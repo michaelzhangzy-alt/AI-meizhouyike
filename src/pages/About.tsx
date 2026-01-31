@@ -1,16 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
+import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Loader2 } from 'lucide-react';
+import { LeadModal } from '../components/home/LeadModal';
 import { HistoryTimeline } from '../components/about/HistoryTimeline';
 import { supabase } from '../lib/supabase';
 import DOMPurify from 'dompurify';
 import { SEO } from '../components/SEO';
-import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 
 const About = () => {
-  const { handleRegister } = usePublicLayoutContext();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [aboutContent, setAboutContent] = useState('');
   const [memberBenefits, setMemberBenefits] = useState<any[]>([]);
@@ -56,9 +58,10 @@ const About = () => {
   };
 
   return (
-    <div className="bg-background flex flex-col relative">
+    <div className="min-h-screen bg-background flex flex-col relative">
       <SEO title="关于我们" description="赋能每一位在校大学生，连接校园与职场的最后一公里。" />
-      <div className="relative z-10">
+      <Navbar onRegisterClick={() => setIsModalOpen(true)} />
+      <main className="flex-1 relative z-10">
         <div className="container py-16 md:py-24">
           {/* Header */}
           <div className="text-center mb-16">
@@ -105,7 +108,7 @@ const About = () => {
                    ))}
                  </ul>
                )}
-               <Button className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm" size="lg" onClick={() => handleRegister('about_page')}>加入会员（咨询助教）</Button>
+               <Button className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm" size="lg" onClick={() => setIsModalOpen(true)}>加入会员（咨询助教）</Button>
             </div>
           </div>
 
@@ -154,7 +157,13 @@ const About = () => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
+      <Footer />
+      <LeadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        source="about_page"
+      />
     </div>
   );
 };

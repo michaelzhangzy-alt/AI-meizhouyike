@@ -2,11 +2,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 import { SEO } from '../components/SEO';
 import { Button } from '../components/ui/button';
 import { Calendar, MapPin, Users, Clock, Share2, CheckCircle, ArrowLeft } from 'lucide-react';
+import { LeadModal } from '../components/home/LeadModal';
 import DOMPurify from 'dompurify';
-import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 
 interface Course {
   id: string;
@@ -21,9 +23,9 @@ interface Course {
 
 export default function CourseDetail() {
   const { id } = useParams();
-  const { handleRegister } = usePublicLayoutContext();
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   
   // If no ID is provided (e.g. /weekly-class route), we fetch the next upcoming course
   const isWeeklyClass = !id;
@@ -75,7 +77,7 @@ export default function CourseDetail() {
 
   if (loading) {
     return (
-      <div className="bg-gray-50 flex items-center justify-center h-full min-h-[50vh]">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-gray-500">加载中...</div>
       </div>
     );
@@ -83,8 +85,9 @@ export default function CourseDetail() {
 
   if (!course) {
     return (
-      <div className="bg-gray-50 flex flex-col h-full">
-        <div className="flex-1 flex flex-col items-center justify-center p-4 text-center min-h-[50vh]">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             {isWeeklyClass ? '本周暂无直播课安排' : '课程不存在'}
           </h2>
@@ -100,6 +103,7 @@ export default function CourseDetail() {
             </Link>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -108,14 +112,15 @@ export default function CourseDetail() {
   const isPast = new Date(course.schedule_time) < new Date();
 
   return (
-    <div className="bg-gray-50 min-h-full">
+    <div className="min-h-screen bg-gray-50">
       <SEO 
         title={`${course.title} - 优尼克斯教育`}
         description={course.description}
         image={course.cover_image}
       />
+      <Navbar />
 
-      <div className="pb-16">
+      <main className="pb-16">
         {/* Hero Section */}
         <div className="bg-white border-b">
           <div className="container mx-auto px-4 py-8 md:py-12">
@@ -194,7 +199,7 @@ export default function CourseDetail() {
                   <Button 
                     size="lg" 
                     className="w-full sm:w-auto text-lg px-8 py-6"
-                    onClick={() => handleRegister(isWeeklyClass ? "weekly_class_detail" : "course_detail", course.title)}
+                    onClick={() => setIsLeadModalOpen(true)}
                     disabled={isPast}
                   >
                     {isPast ? '查看回放 (联系助教)' : '立即免费报名'}
@@ -287,7 +292,7 @@ export default function CourseDetail() {
                 <p className="text-blue-100 mb-6">获取课件、源码，结识更多 AI 爱好者</p>
                 <Button 
                     className="w-full bg-white text-blue-600 hover:bg-blue-50 border-none"
-                    onClick={() => handleRegister(isWeeklyClass ? "weekly_class_detail" : "course_detail", course.title)}
+                    onClick={() => setIsLeadModalOpen(true)}
                 >
                     立即入群
                 </Button>
@@ -311,7 +316,16 @@ export default function CourseDetail() {
             </aside>
           </div>
         </div>
-      </div>
+      </main>
+
+      <LeadModal 
+        isOpen={isLeadModalOpen} 
+        onClose={() => setIsLeadModalOpen(false)} 
+        source={isWeeklyClass ? "weekly_class_detail" : "course_detail"}
+        interestedCourse={course.title}
+      />
+      
+      <Footer />
     </div>
   );
 }
