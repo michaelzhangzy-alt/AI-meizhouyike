@@ -21,8 +21,11 @@ export default function ArticleEditor() {
   
   const [formData, setFormData] = useState({
     title: '',
+    type: 'original', // original | external
     summary: '',
     content: '',
+    external_url: '',
+    external_guide: '',
     cover_image: '',
     status: 'draft',
     seo_keywords: ''
@@ -171,6 +174,18 @@ export default function ArticleEditor() {
           </div>
             
           <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">文章类型</label>
+            <select
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={formData.type}
+              onChange={(e) => setFormData({...formData, type: e.target.value})}
+            >
+              <option value="original">原创文章</option>
+              <option value="external">外链导读</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">封面图片</label>
             <div className="space-y-4">
               <ImageUpload
@@ -234,13 +249,34 @@ export default function ArticleEditor() {
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">正文内容</label>
-            <RichTextEditor
-              value={formData.content}
-              onChange={(content) => setFormData({...formData, content: content})}
-            />
-          </div>
+          {formData.type === 'external' ? (
+            <>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">外部链接 URL</label>
+                <Input
+                  value={formData.external_url}
+                  onChange={(e) => setFormData({...formData, external_url: e.target.value})}
+                  placeholder="https://example.com/article..."
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">导读内容 (显示在详情页)</label>
+                <RichTextEditor
+                  value={formData.external_guide}
+                  onChange={(content) => setFormData({...formData, external_guide: content})}
+                />
+                <p className="text-xs text-gray-500">建议列出 3-5 点核心导读内容</p>
+              </div>
+            </>
+          ) : (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">正文内容</label>
+              <RichTextEditor
+                value={formData.content}
+                onChange={(content) => setFormData({...formData, content: content})}
+              />
+            </div>
+          )}
           
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">SEO 关键词 (逗号分隔)</label>

@@ -2,12 +2,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Navbar } from '../components/layout/Navbar';
-import { Footer } from '../components/layout/Footer';
+import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 import { SEO } from '../components/SEO';
 import { Button } from '../components/ui/button';
 import { Calendar, MapPin, Users, Clock, Share2, CheckCircle, ArrowLeft } from 'lucide-react';
-import { LeadModal } from '../components/home/LeadModal';
 import DOMPurify from 'dompurify';
 
 interface Course {
@@ -23,9 +21,9 @@ interface Course {
 
 export default function CourseDetail() {
   const { id } = useParams();
+  const { handleRegister } = usePublicLayoutContext();
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   
   // If no ID is provided (e.g. /weekly-class route), we fetch the next upcoming course
   const isWeeklyClass = !id;
@@ -86,7 +84,6 @@ export default function CourseDetail() {
   if (!course) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             {isWeeklyClass ? '本周暂无直播课安排' : '课程不存在'}
@@ -103,7 +100,6 @@ export default function CourseDetail() {
             </Link>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -118,7 +114,6 @@ export default function CourseDetail() {
         description={course.description}
         image={course.cover_image}
       />
-      <Navbar />
 
       <main className="pb-16">
         {/* Hero Section */}
@@ -199,7 +194,7 @@ export default function CourseDetail() {
                   <Button 
                     size="lg" 
                     className="w-full sm:w-auto text-lg px-8 py-6"
-                    onClick={() => setIsLeadModalOpen(true)}
+                    onClick={() => handleRegister(isWeeklyClass ? 'weekly_class_hero' : 'course_detail_hero', course.title)}
                     disabled={isPast}
                   >
                     {isPast ? '查看回放 (联系助教)' : '立即免费报名'}
@@ -292,7 +287,7 @@ export default function CourseDetail() {
                 <p className="text-blue-100 mb-6">获取课件、源码，结识更多 AI 爱好者</p>
                 <Button 
                     className="w-full bg-white text-blue-600 hover:bg-blue-50 border-none"
-                    onClick={() => setIsLeadModalOpen(true)}
+                    onClick={() => handleRegister('course_detail_sidebar', course.title)}
                 >
                     立即入群
                 </Button>
@@ -317,15 +312,6 @@ export default function CourseDetail() {
           </div>
         </div>
       </main>
-
-      <LeadModal 
-        isOpen={isLeadModalOpen} 
-        onClose={() => setIsLeadModalOpen(false)} 
-        source={isWeeklyClass ? "weekly_class_detail" : "course_detail"}
-        interestedCourse={course.title}
-      />
-      
-      <Footer />
     </div>
   );
 }

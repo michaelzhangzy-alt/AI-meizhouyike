@@ -2,8 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Navbar } from '../components/layout/Navbar';
-import { Footer } from '../components/layout/Footer';
+import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 import { SEO } from '../components/SEO';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -49,7 +48,6 @@ export default function CourseList() {
   return (
     <div className="min-h-screen bg-gray-50">
       <SEO title="往期课程回放 - 优尼克斯教育" description="浏览优尼克斯教育往期精彩AI公开课回放与资料" />
-      <Navbar />
       
       <main className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
@@ -127,8 +125,6 @@ export default function CourseList() {
           </div>
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }
