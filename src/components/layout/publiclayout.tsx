@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
+import { MobileNav } from './MobileNav';
 import { LeadModal } from '../home/LeadModal';
 
 type PublicLayoutContextType = {
@@ -20,12 +21,13 @@ export function PublicLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col">
       <Navbar onRegisterClick={() => handleRegister('navbar')} />
-      <main className="flex-1">
+      <main className="flex-1 pb-20 md:pb-0">
         <Outlet context={{ handleRegister }} />
       </main>
       <Footer />
+      <MobileNav />
       <LeadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

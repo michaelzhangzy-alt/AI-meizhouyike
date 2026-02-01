@@ -59,30 +59,30 @@ export function FeaturedContent() {
   if (loading) return null;
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-12">
+        <div className="flex flex-col lg:flex-row gap-16">
           
           {/* Latest Courses Column */}
-          <div className="md:w-1/2">
+          <div className="lg:w-1/2">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">最新直播课</h2>
-              <Link to="/weekly-class" className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
-                查看更多 <ArrowRight className="w-4 h-4 ml-1" />
+              <h2 className="text-2xl font-bold text-slate-900">最新直播课</h2>
+              <Link to="/weekly-class" className="text-blue-600 hover:text-blue-700 text-sm font-semibold flex items-center group">
+                查看全部 <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             <div className="space-y-6">
               {courses.map(course => (
-                <Link key={course.id} to={`/courses/${course.id}`} className="flex gap-4 group">
-                  <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-                    <img src={course.cover_image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                <Link key={course.id} to={`/courses/${course.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-slate-50 transition-colors">
+                  <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+                    <img src={course.cover_image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">
+                  <div className="flex flex-col justify-center">
+                    <h3 className="font-bold text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">
                       {course.title}
                     </h3>
-                    <div className="flex items-center text-xs text-gray-500">
-                      <Calendar className="w-3 h-3 mr-1" />
+                    <div className="flex items-center text-xs text-slate-400">
+                      <Calendar className="w-3.5 h-3.5 mr-1.5" />
                       {new Date(course.schedule_time).toLocaleDateString()}
                     </div>
                   </div>
@@ -92,27 +92,30 @@ export function FeaturedContent() {
           </div>
 
           {/* Latest News Column */}
-          <div className="md:w-1/2">
+          <div className="lg:w-1/2">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">最新资讯</h2>
-              <Link to="/news" className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
-                查看更多 <ArrowRight className="w-4 h-4 ml-1" />
+              <h2 className="text-2xl font-bold text-slate-900">最新资讯</h2>
+              <Link to="/news" className="text-blue-600 hover:text-blue-700 text-sm font-semibold flex items-center group">
+                阅读更多 <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             <div className="space-y-6">
               {articles.map(article => (
-                <Link key={article.id} to={`/news/${article.id}`} className="flex gap-4 group">
-                  <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-                     <img src={article.cover_image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                <Link key={article.id} to={`/news/${article.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-slate-50 transition-colors">
+                  <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+                     <img src={article.cover_image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">
+                  <div className="flex flex-col justify-center">
+                    <h3 className="font-bold text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">
                       {article.title}
                     </h3>
-                    <div className="flex items-center text-xs text-gray-500 gap-3">
-                      <span>{new Date(article.created_at).toLocaleDateString()}</span>
+                    <div className="flex items-center text-xs text-slate-400 gap-4">
+                      <span className="flex items-center">
+                        <Calendar className="w-3.5 h-3.5 mr-1.5" />
+                        {new Date(article.created_at).toLocaleDateString()}
+                      </span>
                       {article.type === 'external' && (
-                        <span className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-[10px]">导读</span>
+                        <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[10px] font-medium">导读</span>
                       )}
                     </div>
                   </div>
