@@ -13,38 +13,38 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#2563EB", // blue-600
-          hover: "#1D4ED8",   // blue-700
+          DEFAULT: "#2563EB", // Standard Professional Blue
+          hover: "#1D4ED8",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#F3F4F6", // gray-100
-          foreground: "#111827", // gray-900
+          DEFAULT: "#F8FAFC", // Slate 50
+          foreground: "#0F172A", // Slate 900
         },
         accent: {
-          DEFAULT: "#F59E0B", // amber-500
+          DEFAULT: "#3B82F6", // Lighter Blue
           foreground: "#FFFFFF",
         },
         background: "#FFFFFF",
-        foreground: "#111827", // gray-900
+        foreground: "#0F172A", // Slate 900
         muted: {
-          DEFAULT: "#F9FAFB", // gray-50
-          foreground: "#6B7280", // gray-500
+          DEFAULT: "#F1F5F9", // Slate 100
+          foreground: "#64748B", // Slate 500
         },
-        border: "#E5E7EB", // gray-200
+        border: "#E2E8F0", // Slate 200
       },
       fontFamily: {
         sans: [
+          "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
-          "Noto Sans",
-          "Helvetica",
-          "Arial",
+          "Roboto",
           "sans-serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
         ],
+      },
+      backgroundImage: {
+        'subtle-grid': 'linear-gradient(to right, #f1f5f9 1px, transparent 1px), linear-gradient(to bottom, #f1f5f9 1px, transparent 1px)',
       },
     },
   },

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { usePublicLayoutContext } from '../components/layout/PublicLayout';
-import { Calendar, Eye, ArrowLeft } from 'lucide-react';
+import { Calendar, Eye, ArrowLeft, ExternalLink } from 'lucide-react';
 import DOMPurify from 'dompurify';
 import { SEO } from '../components/SEO';
 
@@ -15,8 +15,10 @@ interface Article {
   cover_image: string;
   created_at: string;
   views: number;
+  type: 'original' | 'external';
+  external_url?: string;
+  external_guide?: string;
 }
-
 interface ArticleListItem {
   id: string;
   title: string;
@@ -48,7 +50,7 @@ export default function NewsDetail() {
         // Fetch current article
         const { data: current, error } = await supabase
           .from('articles')
-          .select('*')
+          .select('id, title, summary, content, cover_image, created_at, views, type, external_url, external_guide')
           .eq('id', id)
           .single();
 
@@ -138,16 +140,48 @@ export default function NewsDetail() {
               </div>
 
               <div className="prose prose-lg max-w-none text-gray-800">
-                 <div 
-                   className="rich-text-content"
-                   dangerouslySetInnerHTML={{ 
-                     __html: DOMPurify.sanitize(article.content, {
-                       ADD_TAGS: ['iframe', 'img', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'hr', 'ul', 'ol', 'li', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'blockquote', 'pre', 'code', 'a', 'b', 'strong', 'i', 'em', 'u', 's', 'strike', 'sub', 'sup', 'font'],
-                       ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'width', 'height', 'style', 'class', 'id', 'data-page-id', 'data-id', 'align', 'color', 'bgcolor', 'border', 'cellpadding', 'cellspacing', 'target', 'href', 'title', 'alt'],
-                       WHOLE_DOCUMENT: false,
-                     }) 
-                   }} 
-                 />
+                 {article.type === 'external' ? (
+                   <div className="bg-gray-50 border border-gray-100 rounded-xl p-8">
+                     <div className="mb-6">
+                       <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                         <span className="w-1 h-6 bg-blue-600 rounded-full mr-3"></span>
+                         导读指南
+                       </h3>
+                       <div 
+                         className="rich-text-content text-gray-700"
+                         dangerouslySetInnerHTML={{ 
+                           __html: DOMPurify.sanitize(article.external_guide || article.summary) 
+                         }} 
+                       />
+                     </div>
+                     
+                     <div className="flex justify-center pt-6 border-t border-gray-200">
+                       <a 
+                         href={article.external_url} 
+                         target="_blank" 
+                         rel="noopener noreferrer"
+                         className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors shadow-sm"
+                       >
+                         阅读原文
+                         <ExternalLink className="w-5 h-5 ml-2" />
+                       </a>
+                     </div>
+                     <p className="text-center text-xs text-gray-400 mt-4">
+                       点击将跳转至第三方网站阅读
+                     </p>
+                   </div>
+                 ) : (
+                   <div 
+                     className="rich-text-content"
+                     dangerouslySetInnerHTML={{ 
+                       __html: DOMPurify.sanitize(article.content, {
+                         ADD_TAGS: ['iframe', 'img', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'hr', 'ul', 'ol', 'li', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'blockquote', 'pre', 'code', 'a', 'b', 'strong', 'i', 'em', 'u', 's', 'strike', 'sub', 'sup', 'font'],
+                         ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'width', 'height', 'style', 'class', 'id', 'data-page-id', 'data-id', 'align', 'color', 'bgcolor', 'border', 'cellpadding', 'cellspacing', 'target', 'href', 'title', 'alt'],
+                         WHOLE_DOCUMENT: false,
+                       }) 
+                     }} 
+                   />
+                 )}
               </div>
             </article>
 

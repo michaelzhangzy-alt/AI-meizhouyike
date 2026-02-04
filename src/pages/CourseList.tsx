@@ -2,9 +2,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 import { SEO } from '../components/SEO';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { Calendar, Users, PlayCircle } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Calendar, Users, MapPin, PlayCircle } from 'lucide-react';
 
 interface Course {
   id: string;
@@ -44,10 +46,10 @@ export default function CourseList() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-full">
+    <div className="min-h-screen bg-gray-50">
       <SEO title="往期课程回放 - 优尼克斯教育" description="浏览优尼克斯教育往期精彩AI公开课回放与资料" />
       
-      <div className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">往期精彩课程</h1>
           <p className="text-xl text-gray-600">错过直播不要紧，回放内容同样精彩</p>
@@ -122,7 +124,7 @@ export default function CourseList() {
             })}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

@@ -12,44 +12,47 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t bg-muted/40">
-      <div className="container py-8 md:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <footer className="border-t border-slate-100 bg-slate-50">
+      <div className="container py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div>
-            <h3 className="text-lg font-semibold mb-2">优尼克斯教育</h3>
-            <p className="text-sm text-muted-foreground max-w-sm">致力于为在校大学生提供最前沿的AI技术实战课程，助力职业成长。</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-4">优尼克斯教育</h3>
+            <p className="text-slate-500 max-w-sm leading-relaxed">
+              致力于为在校大学生提供最前沿的 AI 技术实战课程，
+              助力每一位开发者在智能时代实现职业跃迁。
+            </p>
           </div>
-          <div className="flex flex-col md:items-end space-y-2">
-            <h4 className="font-medium">快速链接</h4>
-            <nav className="flex flex-col space-y-2 text-sm text-muted-foreground md:text-right">
-              <Link 
-                to="/" 
-                className={cn(
-                  "transition-colors hover:text-primary",
-                  location.pathname === "/" ? "text-primary font-medium" : "text-muted-foreground"
-                )}
-                onClick={() => handleScrollTop('/')}
-              >
-                首页
-              </Link>
-              <Link 
-                to="/about" 
-                className={cn(
-                  "transition-colors hover:text-primary",
-                  location.pathname === "/about" ? "text-primary font-medium" : "text-muted-foreground"
-                )}
-                onClick={() => handleScrollTop('/about')}
-              >
-                关于我们
-              </Link>
+          <div className="flex flex-col md:items-end">
+            <h4 className="text-sm font-semibold text-slate-900 mb-6">导航中心</h4>
+            <nav className="flex flex-col space-y-3 text-sm md:text-right">
+              {[
+                { name: '首页', path: '/' },
+                { name: '关于我们', path: '/about' },
+                { name: '本周直播课', path: '/weekly-class' },
+                { name: '往期回看', path: '/courses' }
+              ].map((item) => (
+                <Link 
+                  key={item.path}
+                  to={item.path} 
+                  className={cn(
+                    "transition-colors duration-200",
+                    location.pathname === item.path 
+                      ? "text-blue-600 font-medium" 
+                      : "text-slate-500 hover:text-blue-600"
+                  )}
+                  onClick={() => handleScrollTop(item.path)}
+                >
+                  {item.name}
+                </Link>
+              ))}
             </nav>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <div className="flex flex-col md:flex-row justify-center items-center gap-2">
-            <span>© {new Date().getFullYear()} 优尼克斯教育. All rights reserved.</span>
-            <span className="hidden md:inline">|</span>
-            <span className="text-xs opacity-60 hover:opacity-100 transition-opacity" title="2025-01-19">v1.0.0</span>
+        <div className="mt-16 pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400 text-xs">
+          <p>© {new Date().getFullYear()} 优尼克斯教育 (UNIXTECH). 版权所有.</p>
+          <div className="flex items-center gap-6">
+            <span className="hover:text-slate-600 transition-colors cursor-default">服务状态: 正常运行</span>
+            <span className="opacity-60">Version 1.2.0</span>
           </div>
         </div>
       </div>

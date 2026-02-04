@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
+import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Loader2 } from 'lucide-react';
 import { HistoryTimeline } from '../components/about/HistoryTimeline';
 import { supabase } from '../lib/supabase';
 import DOMPurify from 'dompurify';
 import { SEO } from '../components/SEO';
-import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 
 const About = () => {
   const { handleRegister } = usePublicLayoutContext();
@@ -56,105 +56,110 @@ const About = () => {
   };
 
   return (
-    <div className="bg-background flex flex-col relative">
+    <div className="min-h-screen bg-white flex flex-col">
       <SEO title="关于我们" description="赋能每一位在校大学生，连接校园与职场的最后一公里。" />
-      <div className="relative z-10">
-        <div className="container py-16 md:py-24">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-6">关于我们</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">赋能每一位在校大学生，连接校园与职场的最后一公里。</p>
+      
+      <main className="flex-1">
+        {/* Header / Hero */}
+        <div className="bg-slate-50 border-b border-slate-100">
+          <div className="container py-20 md:py-28 text-center">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 mb-8">
+              关于我们 <span className="text-blue-600">.</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto font-light leading-relaxed">
+              致力于赋能每一位在校大学生，<span className="text-slate-900 font-medium">连接校园与职场的最后一公里</span>。
+            </p>
           </div>
+        </div>
 
+        <div className="container py-20">
           {/* Intro Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start mb-24">
-            <div>
-              <h2 className="text-3xl font-bold mb-6">我们的初心</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start mb-32">
+            <div className="lg:col-span-7">
+              <h2 className="text-3xl font-bold text-slate-900 mb-8 flex items-center gap-3">
+                <span className="w-1.5 h-8 bg-blue-600 rounded-full"></span>
+                我们的初心
+              </h2>
               {loading ? (
                 <div className="space-y-4">
-                   <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
-                   <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse"></div>
-                   <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
+                   <div className="h-4 bg-slate-100 rounded w-full animate-pulse"></div>
+                   <div className="h-4 bg-slate-100 rounded w-5/6 animate-pulse"></div>
+                   <div className="h-4 bg-slate-100 rounded w-full animate-pulse"></div>
                 </div>
               ) : (
                 <div 
-                  className="prose prose-lg text-muted-foreground leading-relaxed rich-text-content"
+                  className="rich-text-content text-lg text-slate-700 leading-loose"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(aboutContent) }}
                 />
               )}
             </div>
-            <div className="bg-white rounded-2xl p-8 md:p-12 border border-gray-100 shadow-sm relative overflow-hidden group">
-               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-900">
-                 <div className="w-2 h-8 bg-blue-600 rounded-full" />
-                 会员权益
-               </h3>
-               {loading ? (
+
+            <div className="lg:col-span-5">
+              <div className="bg-white rounded-3xl p-10 border border-slate-200 shadow-xl shadow-slate-200/50 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -translate-y-1/2 translate-x-1/2 -z-10" />
+                
+                <h3 className="text-2xl font-bold mb-8 text-slate-900">
+                  会员权益
+                </h3>
+                {loading ? (
                   <div className="space-y-4">
-                     {[1,2,3,4].map(i => <div key={i} className="h-6 bg-gray-100 rounded w-3/4 animate-pulse"></div>)}
+                     {[1,2,3,4,5].map(i => <div key={i} className="h-6 bg-slate-50 rounded w-3/4 animate-pulse"></div>)}
                   </div>
-               ) : (
-                 <ul className="space-y-4 relative z-10">
-                   {memberBenefits.map((item, idx) => (
-                     <li key={idx} className="flex items-start text-lg group/item">
-                       <span className="h-2 w-2 bg-blue-600 rounded-full mr-3 mt-2.5 shrink-0 transition-transform group-hover/item:scale-125" />
-                       <div>
-                         <span className="font-medium text-gray-800 group-hover/item:text-blue-600 transition-colors">{item.title}</span>
-                         {item.description && <p className="text-sm text-gray-500 mt-1">{item.description}</p>}
-                       </div>
-                     </li>
-                   ))}
-                 </ul>
-               )}
-               <Button className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm" size="lg" onClick={() => handleRegister('about_page')}>加入会员（咨询助教）</Button>
+                ) : (
+                  <ul className="space-y-6">
+                    {memberBenefits.map((item, idx) => (
+                      <li key={idx} className="flex items-start group">
+                        <div className="h-6 w-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-4 mt-0.5 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                          <span className="text-xs font-bold">{idx + 1}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-900 text-lg">{item.title}</span>
+                          {item.description && <p className="text-sm text-slate-500 mt-1">{item.description}</p>}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <button 
+                  className="mt-10 w-full primary-button py-4 text-lg shadow-lg shadow-blue-200"
+                  onClick={() => handleRegister('about_benefits')}
+                >
+                  加入会员（咨询助教）
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Development History Timeline */}
-          <div className="mb-24 -mx-4 md:-mx-8 lg:-mx-12">
+          <div className="mb-32">
             <HistoryTimeline />
           </div>
 
           {/* Contact Section */}
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-10 text-center">联系我们</h2>
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">联系我们</h2>
+              <div className="h-1 w-12 bg-blue-600 mx-auto rounded-full" />
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="text-center border-none shadow-sm bg-gray-50/50 hover:bg-white hover:shadow-md transition-all duration-300">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <MapPin className="h-6 w-6 text-blue-600" />
+              {[
+                { icon: MapPin, title: '办公地址', content: '长春市北湖科技开发区北远达大街3000号' },
+                { icon: Phone, title: '联系电话', content: '18943996408' },
+                { icon: Mail, title: '电子邮箱', content: '312150036@qq.com' }
+              ].map((item, i) => (
+                <div key={i} className="text-center p-8 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:shadow-slate-200 transition-all duration-300">
+                  <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center mx-auto mb-6">
+                    <item.icon className="h-6 w-6 text-blue-600" />
                   </div>
-                  <CardTitle className="text-lg font-bold">地址</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">长春市北湖科技开发区北远达大街3000号</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-none shadow-sm bg-gray-50/50 hover:bg-white hover:shadow-md transition-all duration-300">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Phone className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <CardTitle className="text-lg font-bold">电话</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">18943996408</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-none shadow-sm bg-gray-50/50 hover:bg-white hover:shadow-md transition-all duration-300">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Mail className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <CardTitle className="text-lg font-bold">邮箱</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">312150036@qq.com</p>
-                </CardContent>
-              </Card>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
+                  <p className="text-slate-600 leading-relaxed">{item.content}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

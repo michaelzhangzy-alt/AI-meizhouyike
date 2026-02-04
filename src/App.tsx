@@ -7,6 +7,7 @@ import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
 import CourseList from './pages/CourseList';
 import CourseDetail from './pages/CourseDetail';
+import WeeklyClass from './pages/WeeklyClass';
 import ScrollToTop from './components/layout/ScrollToTop';
 import { PublicLayout } from './components/layout/PublicLayout';
 
@@ -47,7 +48,7 @@ function AppContent() {
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/courses" element={<CourseList />} />
           <Route path="/courses/:id" element={<CourseDetail />} />
-          <Route path="/weekly-class" element={<CourseDetail />} />
+          <Route path="/weekly-class" element={<WeeklyClass />} />
         </Route>
 
         {/* Admin Routes */}
