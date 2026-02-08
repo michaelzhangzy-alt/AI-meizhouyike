@@ -8,6 +8,8 @@ import NewsDetail from './pages/NewsDetail';
 import CourseList from './pages/CourseList';
 import CourseDetail from './pages/CourseDetail';
 import WeeklyClass from './pages/WeeklyClass';
+import AiToolsHome from './features/ai-tools/pages/AiToolsHome';
+import AiToolDetail from './features/ai-tools/pages/AiToolDetail';
 import ScrollToTop from './components/layout/ScrollToTop';
 import { PublicLayout } from './components/layout/PublicLayout';
 
@@ -49,6 +51,8 @@ function AppContent() {
           <Route path="/courses" element={<CourseList />} />
           <Route path="/courses/:id" element={<CourseDetail />} />
           <Route path="/weekly-class" element={<WeeklyClass />} />
+          <Route path="/ai-tools" element={<AiToolsHome />} />
+          <Route path="/ai-tools/:slug" element={<AiToolDetail />} />
         </Route>
 
         {/* Admin Routes */}

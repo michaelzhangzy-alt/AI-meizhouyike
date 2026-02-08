@@ -22,6 +22,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
     { name: '首页', path: '/' },
     { name: '本周直播课', path: '/weekly-class' },
     { name: '往期回看', path: '/courses' },
+    { name: 'AI 工具', path: '/ai-tools' },
     { name: 'AI 资讯', path: '/news' },
     { name: '关于我们', path: '/about' },
   ];
