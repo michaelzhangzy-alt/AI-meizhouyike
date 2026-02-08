@@ -22,7 +22,7 @@ export function XiaohongshuGenerator() {
     setResult('');
 
     try {
-      // 调用 Supabase Edge Function
+      // 调用 Supabase Edge Function（生产环境安全模式）
       const { data, error } = await supabase.functions.invoke('generate-xiaohongshu', {
         body: { topic, keywords },
       });
