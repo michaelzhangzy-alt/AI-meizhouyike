@@ -1,48 +1,56 @@
-# Changelog
+# 版本迭代日志 (CHANGELOG)
 
-All notable changes to this project will be documented in this file.
+本文档记录了项目从 MVP (v0.5) 到 v1.0 正式版的所有关键迭代与变更。
 
-## [1.0.0] - 2025-01-19
+## v1.0.0 (2026-02-09) - AI 智能体全面稳定版
+> **里程碑**：完成核心 AI 工具的稳定性修复与架构统一，建立标准化接入范式，达到生产级可用标准。
 
-**Milestone: Operational Efficiency (Phase 2)**
-Introduced comprehensive backend management and content systems to automate operations.
+*   ✨ **新特性**
+    *   **Skill 沉淀**：创建 `integrate-ai-agent-stream` Skill，封装了基于 `eventsource-parser` + Proxy Stream 的 AI 接入最佳实践，实现“一键接入”。
+    *   **架构统一**：完成“小红书爆款文案生成器”重构，弃用旧版不稳定接口，统一接入标准流式架构。
+*   🔧 **修复与优化**
+    *   **类型修复**：修复 `eventsource-parser` 导入导致的 TypeScript 类型报错，确保 CI/CD 构建通过。
+    *   **故障排除**：解决 Supabase Edge Function 500 错误及前端无输出问题。
+    *   **开发体验**：优化 Git 提交流程，解决 VS Code 提交卡死问题。
 
-### ✨ New Features
-- **Admin Dashboard**: Centralized dashboard for data overview and lead tracking.
-- **Content Management System (CMS)**:
-  - **Articles**: Rich text editor for news/articles with cover upload and SEO settings.
-  - **Courses**: Management interface for publishing and editing course details.
-- **Teacher Management**: Dedicated interface for managing teacher profiles, including avatar cropping and sorting.
-- **Site Configuration**:
-  - Dynamic "About Us" and "Member Benefits" content configuration.
-  - WeChat Share configuration per page path.
-- **Data Export**: Excel export functionality for leads/registrations.
+## v0.9.0 (2026-02-09) - AI 核心体验优化
+> **里程碑**：攻克流式输出（SSE）技术难点，实现“打字机”效果零延迟、无乱码。
 
-### ⚡ Improvements
-- **WeChat Integration**: Full JS-SDK integration for custom share cards.
-- **Analytics**: Added view counting for articles.
-- **UI/UX**: Enhanced admin interface with responsive sidebar and consistent design language.
+*   ⚡ **性能优化**
+    *   **流式重构**：引入 `eventsource-parser` 库处理网络分包与粘包，彻底替代手写解析逻辑。
+    *   **响应加速**：后端采用 Proxy Stream 模式透传数据，大幅降低首字延迟（TTFT）。
+*   🐛 **Bug 修复**
+    *   根治“科学算运势”工具的双重生成（输出两遍）与 JSON 乱码问题。
+    *   修复长文本生成时的截断问题。
 
-## [0.8.0] - 2025-01-19
+## v0.8.0 (2026-02-08) - AI 工具箱上线
+> **里程碑**：引入 Coze 智能体能力，拓展“AI 工具”模块。
 
-**Milestone: Architecture Upgrade**
-Infrastructure preparation for Phase 2 features.
+*   ✨ **新功能**
+    *   上线“科学算运势”工具，对接 Coze V3 协议，提供个性化命理分析。
+    *   新增 AI 工具列表页与侧边栏导航入口。
 
-### ♻️ Refactor
-- **Database Schema**: Major schema migration (`phase2_schema`) to support articles, courses, teachers, and config tables.
-- **Storage**: Initialized Supabase Storage buckets for `avatars`, `covers`, and `shares`.
+## v0.7.0 (2026-02-06) - 视觉风格升级
+> **里程碑**：确立“简约极客风”设计语言，提升整体质感。
 
-## [0.4.0] - 2024-01-17
+*   🎨 **UI/UX**
+    *   全局样式升级，重构核心 UI 组件库（Button, Card, Input 等）。
+    *   优化移动端适配与交互细节，提升阅读体验。
 
-**Milestone: MVP (Minimum Viable Product)**
-Core loop validation: "Traffic -> Lead Generation".
+## v0.6.0 (2026-02-01) - 内容板块完善
+> **里程碑**：完善网站核心内容展示能力，丰富信息维度。
 
-### 🚀 Launched
-- **Public Website**:
-  - `Home`: Landing page with featured course and teacher sections.
-  - `About`: Static agency introduction page.
-- **Lead Capture**:
-  - Minimalist modal form for quick user registration.
-  - Integration with `leads` database table.
-- **Mobile Adaptation**: Fully responsive design for mobile visitors.
-- **Basic SEO**: Metadata configuration for core pages.
+*   ✨ **新功能**
+    *   新增“直播课”页面，聚合视频课程资源。
+    *   新增“外链导读”功能，支持跳转外部优质文章。
+    *   优化新闻详情页布局 (`NewsDetail`)，增加摘要显示。
+*   🏗️ **架构调整**
+    *   重构首页布局，移除冗余的 `PublicLayout` 组件，优化路由结构。
+
+## v0.5.0 (2026-01-30) - MVP 最小可行性产品
+> **里程碑**：项目初始化，基础框架搭建完成。
+
+*   🚀 **初始化**
+    *   完成项目脚手架搭建，确立 Tech Stack (React + Vite + Supabase)。
+    *   实现基础的线索管理 (Admin) 与会员类型展示功能。
+    *   完成首次代码提交与部署环境配置。
