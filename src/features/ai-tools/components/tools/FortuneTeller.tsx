@@ -1,4 +1,5 @@
 
+import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -52,71 +53,61 @@ export function FortuneTeller() {
         }),
       });
 
-      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-      if (!response.body) throw new Error('No response body');
+      // 使用 eventsource-parser 创建标准解析器
+      const parser = createParser({
+        onEvent: (event: ParsedEvent | ReconnectInterval) => {
+          // 直接处理事件，不再检查 event.type === 'event'，因为 ParsedEvent 本身就是事件
+          try {
+            // 某些情况下 Coze 会发送 [DONE] 标记
+            if (event.data === '[DONE]') return;
 
+            const data = JSON.parse(event.data);
+            let newContent = '';
+
+            // ---------------------------------------------------------
+            // 严格的 SSE 状态机逻辑
+            // ---------------------------------------------------------
+
+            // 1. 核心规则：只认准 conversation.message.delta 事件
+            if (event.event === 'conversation.message.delta') {
+                if (data.content && typeof data.content === 'string') {
+                    newContent = data.content;
+                } else if (data.delta && typeof data.delta === 'string') {
+                    newContent = data.delta;
+                }
+            }
+            // 2. 兼容规则：处理无 event 头但有标准 content 的消息
+            else if (!event.event && !data.event) {
+                 if (data.content && typeof data.content === 'string') {
+                     const trimmedContent = data.content.trim();
+                     if (!trimmedContent.startsWith('{')) {
+                        newContent = data.content;
+                     }
+                 }
+            }
+
+            // 3. 兜底防御：再次检查 newContent 是否包含 JSON 乱码
+            if (newContent) {
+                const trimmed = newContent.trim();
+                if (trimmed.startsWith('{"') || (trimmed.startsWith('{') && trimmed.endsWith('}'))) {
+                    return;
+                }
+                updateResult(newContent);
+            }
+          } catch (e) {
+            // JSON 解析失败忽略
+          }
+        }
+      });
+  
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      
+  
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-            if (line.trim().startsWith('data:')) {
-                try {
-                    const jsonStr = line.trim().substring(5).trim();
-                    if (!jsonStr) continue;
-                    
-                    const data = JSON.parse(jsonStr);
-                    let newContent = '';
-                    
-                    // 过滤掉系统消息，只提取真正的回答内容
-                    // 1. 忽略 generate_answer_finish 等系统事件
-                    if (data.msg_type === 'generate_answer_finish') continue;
-                    if (data.event === 'done') continue;
-
-                    // 2. 识别 Coze V3 协议
-                    if (data.event === 'conversation.message.delta' || data.type === 'answer') {
-                        // 优先取 data.content
-                        if (data.content && typeof data.content === 'string') {
-                            newContent = data.content;
-                        } 
-                        // 其次取 data.message.content
-                        else if (data.message?.content && typeof data.message.content === 'string') {
-                            newContent = data.message.content;
-                        }
-                        // 最后取 data.delta
-                        else if (data.delta && typeof data.delta === 'string') {
-                            newContent = data.delta;
-                        }
-                    } 
-                    // 3. 兼容旧版或简单协议
-                    else if (!data.event && !data.msg_type) {
-                         if (typeof data.content === 'string') newContent = data.content;
-                    }
-
-                    // 严格过滤：如果 newContent 包含 JSON 结构（如 {"name":...}），则认为是漏网的系统消息，强制丢弃
-                    if (newContent && (newContent.trim().startsWith('{') || newContent.trim().startsWith('{"'))) {
-                        try {
-                            JSON.parse(newContent); // 尝试解析，如果成功则是 JSON，丢弃
-                            continue;
-                        } catch (e) {
-                            // 不是合法 JSON，可能是普通文本（如代码块），保留
-                        }
-                    }
-
-                    if (newContent) {
-                        updateResult(newContent);
-                    }
-                } catch (e) {
-                    // ignore
-                }
-            }
-        }
+        // 将 chunk 喂给 parser，由它处理分包、粘包
+        parser.feed(decoder.decode(value));
       }
 
     } catch (err: any) {
@@ -153,14 +144,34 @@ export function FortuneTeller() {
         </div>
 
         <div className="space-y-4">
-            <div className="bg-purple-50 p-4 rounded-lg text-sm text-purple-800 mb-4">
-                <p className="font-medium mb-2">👋 哈喽宝子们！我是实诚又专业的命理师。</p>
-                <p className="mb-2">想算得准，这3项信息一定要备齐：</p>
-                <ul className="list-disc list-inside space-y-1 opacity-90">
-                    <li>专属档案（性别、出生地、精确时间）</li>
-                    <li>八字密码（四柱八字，没排盘我帮你排）</li>
-                    <li>定制分析（事业、财运、桃花）</li>
-                </ul>
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-xl text-sm text-purple-900 mb-4 border border-purple-100 shadow-sm">
+                <p className="font-bold text-base mb-2 flex items-center gap-2">
+                    <span className="text-xl">👋</span> 哈喽宝子们！
+                </p>
+                <p className="mb-3 leading-relaxed text-purple-800">
+                    有没有觉得有时候人生像开盲盒？🎁 明明很努力，却总差那么一点点运气？<br/>
+                    别慌！今天咱们就用最传统、最严谨的四柱命理，帮你把未来的路看得明明白白！
+                </p>
+                <div className="bg-white/60 rounded-lg p-3">
+                    <p className="font-semibold text-purple-700 mb-2 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-purple-500" />
+                        想算得准，这3项信息一定要备齐：
+                    </p>
+                    <ul className="space-y-2 text-purple-800">
+                        <li className="flex items-start gap-2">
+                            <span className="bg-purple-200 text-purple-700 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                            <span><span className="font-medium">专属档案</span>：性别、出生地、精确时间</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                            <span className="bg-purple-200 text-purple-700 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                            <span><span className="font-medium">八字密码</span>：四柱八字，没排盘我帮你排</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                            <span className="bg-purple-200 text-purple-700 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+                            <span><span className="font-medium">定制分析</span>：事业、财运、桃花</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
           <div>
