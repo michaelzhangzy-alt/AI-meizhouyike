@@ -1,96 +1,115 @@
-# unixtech-xyz
+# unixtech-xyz (v1.0.0)
 
-公开课引流 + 内容沉淀 + 后台运营提效的一体化官网。
+> **"公开课引流 + 内容沉淀 + AI 效率工具 + 后台运营提效" 的一体化教育官网平台。**
 
-## 功能概览
+![Status](https://img.shields.io/badge/Status-Production%20Ready-green) ![Tech](https://img.shields.io/badge/Tech-React%20%7C%20Supabase%20%7C%20Coze-blue)
 
-### 前台
-- 首页：本周公开课（主推 + 预告）、师资展示、弹窗留资报名
-- 往期课程：列表页 `/courses`、详情页 `/courses/:id`（支持回放/直播状态展示）
-- AI 资讯：列表页 `/news`、详情页 `/news/:id`（富文本渲染、上一篇/下一篇、侧栏推荐）
-- 关于我们：后台可配置的文案与会员权益 + 发展历程时间轴
+## 🌟 核心功能亮点
 
-### 后台（`/admin`）
-- 仪表盘：关键指标 + 最近报名动态
-- 报名管理：列表查看、搜索、导出 Excel
-- 课程管理：新增/编辑/发布/下架，封面本地上传
-- 资讯管理：富文本编辑（表格/图片/颜色/一键排版），封面上传/从正文选择并裁剪，SEO 字段
-- 分享配置：按页面路径配置微信分享标题/描述/图片（支持本地上传），并内置使用指南
-- 师资管理：讲师 CRUD，头像上传与裁剪
-- 站点内容：关于我们文案、会员权益动态维护
-- 会员与社群：付费会员名单导入、微信群二维码配置
+### 🤖 AI 智能体矩阵 (New in v1.0)
+集成了 Coze V3 智能体能力，通过 **Proxy Stream + Eventsource Parser** 架构实现企业级流式体验。
+*   **科学算运势**：输入生辰八字，AI 实时推演流年运势，支持打字机效果，零延迟、无乱码。
+*   **小红书爆款文案**：输入主题与关键词，自动生成 Emoji 丰富、语气活泼的种草文案，一键复制。
 
-## 技术栈
+### 🎨 视觉体验升级 (Minimalist Cyber)
+*   **简约极客风**：全站 UI 重构，采用清爽的紫色/红色/蓝色调区分不同板块。
+*   **移动端适配**：精心打磨的响应式布局，在手机端也能获得原生 App 般的体验。
 
-- React 18 + Vite + TypeScript
-- TailwindCSS
-- Supabase（Postgres / Auth / Storage / Edge Functions）
-- 富文本：TinyMCE（`@tinymce/tinymce-react`）
-- 其他：zustand、xlsx、dompurify、react-easy-crop、framer-motion
+### 📚 内容生态系统
+*   **公开课/直播课**：支持往期回放、本周直播预告、自动跳转最近课程。
+*   **AI 资讯**：支持富文本文章展示，独创“外链导读”模式，无缝跳转外部优质资源。
 
-## 本地开发
+### ⚙️ 运营中台 (Admin CMS)
+*   **线索管理**：实时查看报名数据，支持 Excel 一键导出。
+*   **内容发布**：所见即所得的富文本编辑器（TinyMCE），支持图片裁剪与上传。
+*   **微信分享**：按页面路径动态配置分享卡片（标题/描述/图片），无需开发介入。
 
-1. 安装依赖
+---
 
+## 🛠 技术架构
+
+### 前端 (Frontend)
+*   **框架**：React 18 + Vite
+*   **语言**：TypeScript
+*   **样式**：TailwindCSS + Framer Motion
+*   **状态**：Zustand
+*   **AI 流处理**：`eventsource-parser`
+
+### 后端 (Backend as a Service)
+*   **服务**：Supabase
+*   **数据库**：Postgres (启用 RLS 行级安全策略)
+*   **存储**：Supabase Storage (图片资源)
+*   **计算**：Edge Functions (Deno) - 处理 AI 代理与微信签名
+
+---
+
+## 🚀 快速开始
+
+### 1. 环境准备
+确保本地已安装 Node.js (v18+) 和 Git。
+
+### 2. 安装依赖
 ```bash
+git clone https://github.com/your-repo/unixtech-xyz.git
+cd unixtech-xyz
 npm install
 ```
 
-2. 配置环境变量（项目根目录 `.env`）
-
+### 3. 配置环境变量
+复制 `.env.example` 为 `.env`，并填入 Supabase 公钥：
 ```bash
-VITE_SUPABASE_URL=...
-VITE_SUPABASE_ANON_KEY=...
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-3. 启动开发服务器
-
+### 4. 启动开发服务器
 ```bash
 npm run dev
 ```
+访问 `http://localhost:5173` 查看前台，访问 `/admin/login` 进入后台。
 
-打开：
-- 前台：`http://localhost:5173/`
-- 后台登录：`http://localhost:5173/admin/login`
+---
 
-## Supabase 说明
+## 📂 目录结构说明
 
-### 数据库迁移
+```bash
+src/
+├── features/           # 🤖 核心业务模块
+│   └── ai-tools/       # AI 工具箱 (FortuneTeller, Xiaohongshu...)
+├── components/         # 🧩 通用组件
+│   ├── ui/             # 基础 UI 库 (Button, Card, Input...)
+│   └── layout/         # 布局组件
+├── pages/              # 📄 页面路由
+│   ├── admin/          # 后台管理页
+│   └── ...             # 前台展示页
+└── lib/                # 🛠 工具函数 (supabase client)
 
-本项目使用 `supabase/migrations` 管理数据库结构（课程、资讯、分享配置、讲师、站点内容、会员等）。
+supabase/
+├── functions/          # ⚡ Edge Functions (后端逻辑)
+│   ├── fortune-teller/ # 通用 AI 代理接口 (Stable)
+│   └── ...
+└── migrations/         # 🗄 数据库变更记录
+```
 
-### Storage 桶
+## 🔒 安全说明
 
-- `course-covers`：课程/编辑器图片等
-- `share-images`：微信分享图、讲师头像等
-- `wechat-groups`：微信群二维码
+*   **API Key 保护**：所有第三方 API Key (Coze, WeChat) 均存储在后端环境变量中，前端无法获取。
+*   **数据权限**：
+    *   `leads` 表：允许匿名写入（报名），严禁匿名读取。
+    *   `paid_members` 表：仅后台登录用户可读写。
 
-### Edge Functions
+## 📦 部署指南
 
-- `wechat-signature`：生成微信 JS-SDK 签名（线上域名环境使用）
-- `submit-lead`：报名写入与通知（目前可选，前台默认直连写入 leads）
+本项目针对 **Vercel** 进行了优化配置：
+1.  将代码推送到 GitHub。
+2.  在 Vercel 中导入仓库。
+3.  在 Vercel Settings 中配置环境变量 (`VITE_SUPABASE_...`)。
+4.  点击 Deploy，即可自动构建上线。
 
-需要在 Supabase 后台为 `wechat-signature` 配置环境变量：
+---
 
-- `WECHAT_APP_ID`
-- `WECHAT_APP_SECRET`
-
-## 微信分享如何生效
-
-- 本地 `localhost` 无法完整验证微信 JS-SDK（项目里已对本地做了跳过处理）。
-- 必须部署到正式域名，并在微信公众号后台配置“JS接口安全域名”。
-
-## 文档
-
-PRD 与技术架构文档位于：
-- `.trae/documents/PRD_培训机构官网_阶段1_MVP.md`
-- `.trae/documents/技术架构_培训机构官网_阶段1_MVP.md`
-- `.trae/documents/PRD_培训机构官网_阶段2_运营提效.md`
-- `.trae/documents/技术架构_培训机构官网_阶段2_运营提效.md`
-- `.trae/documents/PRD_培训机构官网_整体.md`
-- `.trae/documents/技术架构_培训机构官网_整体.md`
-
-## 已知限制
-
-- 从飞书/部分平台复制整段图文时，图片可能因鉴权/防盗链无法显示；建议图片用截图粘贴或本地上传。
-- `leads` 表目前允许匿名写入（为快速上线）；正式上线前建议收紧为“匿名仅插入、禁止匿名读取”，并将写入迁移到 `submit-lead` Edge Function。
+## 📝 版本日志
+详见 [CHANGELOG.md](./CHANGELOG.md)
+*   **v1.0.0**: AI 智能体全面稳定版 (Current)
+*   **v0.8.0**: AI 工具箱上线
+*   **v0.5.0**: MVP 发布
