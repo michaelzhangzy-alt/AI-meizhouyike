@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser';
+import { createParser } from 'eventsource-parser';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -49,7 +49,7 @@ export function XiaohongshuGenerator() {
 
       // 使用 eventsource-parser 创建标准解析器
       const parser = createParser({
-        onEvent: (event: ParsedEvent | ReconnectInterval) => {
+        onEvent: (event) => {
           // 直接处理事件，不再检查 event.type === 'event'，因为 ParsedEvent 本身就是事件
           try {
             if (event.data === '[DONE]') return;

@@ -1,5 +1,5 @@
 
-import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser';
+import { createParser } from 'eventsource-parser';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -55,7 +55,7 @@ export function FortuneTeller() {
 
       // 使用 eventsource-parser 创建标准解析器
       const parser = createParser({
-        onEvent: (event: ParsedEvent | ReconnectInterval) => {
+        onEvent: (event) => {
           // 直接处理事件，不再检查 event.type === 'event'，因为 ParsedEvent 本身就是事件
           try {
             // 某些情况下 Coze 会发送 [DONE] 标记
