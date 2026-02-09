@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { createParser } from 'eventsource-parser';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { supabase } from '@/lib/supabase';
 import { Loader2, Sparkles, Copy, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -14,6 +14,10 @@ export function XiaohongshuGenerator() {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
 
+  const updateResult = (newText: string) => {
+    setResult(prev => prev + newText);
+  };
+
   const handleGenerate = async () => {
     if (!topic) return;
 
@@ -22,25 +26,77 @@ export function XiaohongshuGenerator() {
     setResult('');
 
     try {
-      // 调用 Supabase Edge Function
-      const { data, error } = await supabase.functions.invoke('generate-xiaohongshu', {
-        body: { topic, keywords },
+      // 构造 Prompt
+      const query = `请帮我写一篇小红书爆款笔记。\n主题：${topic}\n${keywords ? `关键词：${keywords}\n` : ''}\n要求：\n1. 标题要吸引人，带emoji\n2. 正文分段清晰，多用emoji，语气活泼亲切（家人们、绝绝子等）\n3. 结尾带相关话题标签\n4. 重点突出，干货满满`;
+
+      // 直接调用 fortune-teller 接口（因为它是一个通用的 Coze 代理）
+      const response = await fetch('https://zkfehoobtmqafzskodvi.supabase.co/functions/v1/fortune-teller', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ 
+            query: query,
+            // 注意：这里仍然使用相同的 bot_id，或者您可以替换为专门的小红书 bot_id
+            bot_id: "7603961930159505435", 
+            user_id: "user_" + Math.random().toString(36).substring(7)
+        }),
       });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+      if (!response.body) throw new Error('No response body');
 
-      if (data?.content) {
-        setResult(data.content);
-      } else {
-        throw new Error('未返回有效内容');
+      // 使用 eventsource-parser 创建标准解析器
+      const parser = createParser({
+        onEvent: (event) => {
+          // 直接处理事件，不再检查 event.type === 'event'，因为 ParsedEvent 本身就是事件
+          try {
+            if (event.data === '[DONE]') return;
+            const data = JSON.parse(event.data);
+            let newContent = '';
+
+            if (event.event === 'conversation.message.delta') {
+                if (data.content && typeof data.content === 'string') {
+                    newContent = data.content;
+                } else if (data.delta && typeof data.delta === 'string') {
+                    newContent = data.delta;
+                }
+            }
+            else if (!event.event && !data.event) {
+                 if (data.content && typeof data.content === 'string') {
+                     const trimmedContent = data.content.trim();
+                     if (!trimmedContent.startsWith('{')) {
+                        newContent = data.content;
+                     }
+                 }
+            }
+
+            if (newContent) {
+                const trimmed = newContent.trim();
+                if (trimmed.startsWith('{"') || (trimmed.startsWith('{') && trimmed.endsWith('}'))) {
+                    return;
+                }
+                updateResult(newContent);
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+      });
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        parser.feed(decoder.decode(value));
       }
+
     } catch (err: any) {
       console.error('Generation error:', err);
       setError(err.message || '生成失败，请稍后重试');
-      // 模拟生成（为了演示效果，如果API未配置）
-      if (err.message?.includes('FunctionsFetchError') || err.message?.includes('404')) {
-         setResult(`> ⚠️ 注意：后端 API 尚未配置，以下为模拟生成结果。请按照教程配置 Supabase Edge Function。\n\n# ${topic} | 绝绝子！这波操作真的绝了 ✨\n\n家人们，今天一定要给你们安利这个神器！💖\n\n${keywords ? `关键词涉及到：${keywords}\n\n` : ''}真的太好用了，亲测有效！不踩雷！\n\n## 👇 重点看这里\n1. 第一点优势...\n2. 第二点优势...\n\n#推荐 #好物分享 #${topic} #宝藏神器`);
-      }
     } finally {
       setIsLoading(false);
     }

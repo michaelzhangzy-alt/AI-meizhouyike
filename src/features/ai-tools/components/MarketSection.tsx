@@ -151,12 +151,12 @@ const toolsData: Record<string, Tool[]> = {
   pro: [
     {
       id: 301,
-      title: "通义千问",
-      desc: "阿里大模型，通晓中国文化，写公文、写策划、做分析都很在行。",
-      icon: "🤖",
-      tag: "全能助手",
-      category: "Assistant",
-      link: "https://tongyi.aliyun.com/",
+      title: "DeepSeek (深度求索)",
+      desc: "国产开源之光，推理能力极强，写代码、做数学题表现惊人，且价格亲民。",
+      icon: "🐋",
+      tag: "硬核推理",
+      category: "Logic",
+      link: "https://chat.deepseek.com/",
       isExternal: true
     },
     {
@@ -171,42 +171,42 @@ const toolsData: Record<string, Tool[]> = {
     },
     {
       id: 303,
-      title: "智谱清言",
-      desc: "清华系 GLM-4 模型，数据分析能力强，支持代码解释器和联网搜索。",
-      icon: "🧠",
-      tag: "数据分析",
-      category: "Analysis",
-      link: "https://chatglm.cn/",
+      title: "扣子 (Coze)",
+      desc: "字节跳动推出的一站式 AI Bot 开发平台，无需编程，快速搭建你的专属 AI 智能体。",
+      icon: "🤖",
+      tag: "AI 智能体",
+      category: "Platform",
+      link: "https://www.coze.cn/",
       isExternal: true
     },
     {
       id: 304,
+      title: "腾讯元宝",
+      desc: "腾讯出品的 AI 助手，背靠公众号生态，内容搜索和总结能力极强。",
+      icon: "💰",
+      tag: "内容搜索",
+      category: "Assistant",
+      link: "https://yuanbao.tencent.com/",
+      isExternal: true
+    },
+    {
+      id: 305,
+      title: "通义千问",
+      desc: "阿里大模型，通晓中国文化，写公文、写策划、做分析都很在行。",
+      icon: "🧠",
+      tag: "全能助手",
+      category: "Assistant",
+      link: "https://tongyi.aliyun.com/",
+      isExternal: true
+    },
+    {
+      id: 306,
       title: "文心一言",
       desc: "百度出品，综合能力强，拥有国内最大的知识图谱，适合查询商业资讯。",
       icon: "💬",
       tag: "知识问答",
       category: "Assistant",
       link: "https://yiyan.baidu.com/",
-      isExternal: true
-    },
-    {
-      id: 305,
-      title: "稿定设计",
-      desc: "新媒体运营必备，AI 自动生成海报、抠图、去水印，电商做图神器。",
-      icon: "🖼️",
-      tag: "设计排版",
-      category: "Design",
-      link: "https://www.gaoding.com/",
-      isExternal: true
-    },
-    {
-      id: 306,
-      title: "DeepSeek (深度求索)",
-      desc: "国产开源之光，推理能力极强，写代码、做数学题表现惊人，且价格亲民。",
-      icon: "🐋",
-      tag: "硬核推理",
-      category: "Logic",
-      link: "https://chat.deepseek.com/",
       isExternal: true
     },
   ]

@@ -8,7 +8,7 @@ export function Hero() {
       <div className="container mx-auto px-6">
         <div className="relative overflow-hidden rounded-3xl border border-indigo-100 bg-gradient-to-b from-indigo-50/50 to-white p-10">
           <div className="mb-8">
-            <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">本周原创首发</h1>
+            <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">本周原创AI工具</h1>
             <p className="text-gray-600">来自“AI周课”的独家智能体与工作流</p>
           </div>
 
@@ -37,15 +37,17 @@ export function Hero() {
 
             {/* Side Cards */}
             <div className="flex flex-col gap-4">
-              <Card className="flex items-center gap-5 p-6 hover:border-indigo-200 hover:shadow-md transition-all">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xl">
-                  📊
-                </div>
-                <div>
-                  <h3 className="mb-1 text-lg font-bold text-gray-900">周报自动化 Agent</h3>
-                  <p className="text-sm text-gray-500">连接飞书/钉钉，自动汇总日报</p>
-                </div>
-              </Card>
+              <Link to="/ai-tools/fortune" className="block">
+                <Card className="flex items-center gap-5 p-6 hover:border-indigo-200 hover:shadow-md transition-all cursor-pointer h-full">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-xl">
+                    🔮
+                  </div>
+                  <div>
+                    <h3 className="mb-1 text-lg font-bold text-gray-900">科学算运势</h3>
+                    <p className="text-sm text-gray-500">扣子智能体驱动，测测你的今日运势</p>
+                  </div>
+                </Card>
+              </Link>
 
               <Card className="flex items-center gap-5 p-6 hover:border-indigo-200 hover:shadow-md transition-all">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xl">

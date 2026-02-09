@@ -10,6 +10,7 @@ import CourseDetail from './pages/CourseDetail';
 import WeeklyClass from './pages/WeeklyClass';
 import AiToolsHome from './features/ai-tools/pages/AiToolsHome';
 import AiToolDetail from './features/ai-tools/pages/AiToolDetail';
+import { FortuneTeller } from './features/ai-tools/components/tools/FortuneTeller';
 import ScrollToTop from './components/layout/ScrollToTop';
 import { PublicLayout } from './components/layout/PublicLayout';
 
@@ -52,6 +53,7 @@ function AppContent() {
           <Route path="/courses/:id" element={<CourseDetail />} />
           <Route path="/weekly-class" element={<WeeklyClass />} />
           <Route path="/ai-tools" element={<AiToolsHome />} />
+          <Route path="/ai-tools/fortune" element={<FortuneTeller />} />
           <Route path="/ai-tools/:slug" element={<AiToolDetail />} />
         </Route>
 

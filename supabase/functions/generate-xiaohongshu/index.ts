@@ -22,10 +22,10 @@ Deno.serve(async (req) => {
       throw new Error('Missing topic')
     }
 
-    // 3. 准备调用 AI API (这里以 OpenAI 格式为例，也兼容 DeepSeek / Moonshot)
-    // 注意：需要在 Supabase 后台设置 OPENAI_API_KEY 环境变量
-    const API_KEY = Deno.env.get('OPENAI_API_KEY')
-    const API_URL = 'https://api.openai.com/v1/chat/completions' // 如果是 DeepSeek，改为 https://api.deepseek.com/chat/completions
+    // 3. 准备调用 AI API
+    // 优先从环境变量获取，如果未设置则使用默认 key (注意：实际生产环境请务必使用环境变量)
+    const API_KEY = Deno.env.get('SILICONFLOW_API_KEY') || 'sk-uuriupdoksavucfemlmcagzqbgqgzwvkvemvwxwoxxocgqvq'
+    const API_URL = 'https://api.siliconflow.cn/v1/chat/completions'
 
     if (!API_KEY) {
       throw new Error('Missing API Key configuration')
@@ -50,12 +50,12 @@ Deno.serve(async (req) => {
         'Authorization': `Bearer ${API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini', // 或者 deepseek-chat
+        model: 'deepseek-ai/DeepSeek-V2.5', // 使用 DeepSeek V2.5
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
         ],
-        temperature: 0.8,
+        temperature: 0.7,
       }),
     })
 

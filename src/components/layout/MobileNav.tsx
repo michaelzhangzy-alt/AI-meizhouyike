@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, PlayCircle, Newspaper, User, Menu } from 'lucide-react';
+import { Home, PlayCircle, Newspaper, User, Wrench } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 export function MobileNav() {
@@ -9,6 +9,7 @@ export function MobileNav() {
   const navItems = [
     { name: '首页', path: '/', icon: Home },
     { name: '直播课', path: '/weekly-class', icon: PlayCircle },
+    { name: '工具', path: '/ai-tools', icon: Wrench },
     { name: '资讯', path: '/news', icon: Newspaper },
     { name: '关于', path: '/about', icon: User },
   ];
