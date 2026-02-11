@@ -5,6 +5,8 @@ import { SEO } from '../components/SEO';
 import { NewsCarousel } from '../components/news/NewsCarousel';
 import { MasonryFeed } from '../components/news/MasonryFeed';
 import { TimelineFeed } from '../components/news/TimelineFeed';
+import { Button } from '../components/ui/button';
+import { AlertCircle, RefreshCw, Inbox } from 'lucide-react';
 
 interface Article {
   id: string;
@@ -20,53 +22,66 @@ export default function News() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [featuredArticles, setFeaturedArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<'all' | 'original' | 'external'>('all');
+
+  // 独立加载轮播图数据，确保即使列表加载失败也能尝试显示轮播图
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      if (featuredArticles.length > 0) return;
+      try {
+        const { data: featuredData } = await supabase
+          .from('articles')
+          .select('id, title, cover_image, type')
+          .eq('status', 'published')
+          .limit(5);
+        
+        setFeaturedArticles(featuredData?.map(item => ({
+          id: item.id,
+          title: item.title,
+          image: item.cover_image,
+          category: item.type === 'original' ? '深度好文' : '行业快讯'
+        })) || []);
+      } catch (err) {
+        console.error('Error fetching featured articles:', err);
+      }
+    };
+    fetchFeatured();
+  }, []);
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         setLoading(true);
+        setError(null);
         
         // Fetch main list
         let query = supabase
           .from('articles')
           .select('id, title, summary, cover_image, created_at, type, external_url')
           .eq('status', 'published')
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .limit(50);
 
         if (filterType !== 'all') {
           query = query.eq('type', filterType);
         }
 
         const { data, error } = await query;
+
         if (error) throw error;
         setArticles(data || []);
 
-        // Fetch featured for carousel (only once ideally, but simple here)
-        if (featuredArticles.length === 0) {
-          const { data: featuredData } = await supabase
-            .from('articles')
-            .select('id, title, cover_image, type')
-            .eq('status', 'published')
-            .limit(5);
-          
-          setFeaturedArticles(featuredData?.map(item => ({
-            id: item.id,
-            title: item.title,
-            image: item.cover_image,
-            category: item.type === 'original' ? '深度好文' : '行业快讯'
-          })) || []);
-        }
-
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching news:', error);
+        setError(error.message || '加载失败');
       } finally {
         setLoading(false);
       }
     };
 
     fetchArticles();
-  }, [filterType, featuredArticles.length]);
+  }, [filterType]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -77,8 +92,8 @@ export default function News() {
           <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">AI 行业资讯</h1>
           <p className="text-lg text-slate-500 mb-8 font-light">精选全球 AI 前沿动态，助你保持技术敏锐度</p>
           
-          {/* Carousel */}
-          {!loading && featuredArticles.length > 0 && (
+          {/* Carousel - 独立显示，不受列表 loading 状态影响 */}
+          {featuredArticles.length > 0 && (
             <NewsCarousel items={featuredArticles} />
           )}
 
@@ -111,6 +126,23 @@ export default function News() {
              {[1,2,3,4,5,6].map(i => (
                <div key={i} className="bg-slate-100 rounded-2xl h-64 animate-pulse break-inside-avoid" />
              ))}
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500 mb-4">
+              <AlertCircle className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">内容加载失败</h3>
+            <p className="text-slate-500 mb-6 max-w-md text-center">{error === '请求超时' ? '网络连接较慢，请稍后重试' : '获取资讯列表时遇到问题'}</p>
+            <Button onClick={() => setFilterType(prev => prev)} variant="outline" className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              重新加载
+            </Button>
+          </div>
+        ) : articles.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            <Inbox className="w-12 h-12 text-slate-300 mb-4" />
+            <p className="text-slate-500 text-lg">暂无相关资讯</p>
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">

@@ -70,7 +70,7 @@ export function ConversionSection() {
               className="bg-white text-blue-600 hover:bg-blue-50 h-14 px-10 rounded-xl text-lg font-bold transition-all active:scale-95"
               disabled={status === 'submitting'}
             >
-              {status === 'submitting' ? '提交中...' : '立即加入'}
+              {status === 'submitting' ? '提交中...' : '免费领取'}
               {!status.startsWith('submit') && <ArrowRight className="w-5 h-5 ml-2" />}
             </button>
           </form>

@@ -1,6 +1,6 @@
 
-import { useEffect } from 'react';
-import { Outlet, useNavigate, Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Button } from '../ui/button';
 import { 
@@ -17,21 +17,30 @@ import { clsx } from 'clsx';
 
 export default function AdminLayout() {
   const { session, loading, signOut } = useAuthStore();
-  const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!loading && !session) {
-      navigate('/admin/login');
-    }
-  }, [session, loading, navigate]);
+  // 调试日志：帮助我们确认当前状态
+  // console.log('AdminLayout State:', { loading, hasSession: !!session });
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">加载中...</div>;
+  // 1. 只有在真正需要等待的时候才显示 Loading
+  // 这里的关键是：如果 loading 为 true，我们必须确信它是真的在加载中
+  // 如果 loading 为 true 但 session 已经有了（比如初始化过程中监听器先触发了），那就不需要 Loading 界面了
+  if (loading && !session) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <p className="text-gray-500">系统加载中...</p>
+      </div>
+    );
   }
 
-  if (!session) return null;
+  // 2. 加载结束（或已有 Session），检查是否已登录
+  if (!session) {
+    // 强制跳转到登录页，并带上 `replace` 属性替换当前历史记录，防止回退死循环
+    return <Navigate to="/admin/login" replace />;
+  }
 
+  // 3. 已登录，显示后台布局
   const navItems = [
     { label: '仪表盘', icon: LayoutDashboard, path: '/admin/dashboard' },
     { label: '报名管理', icon: Users, path: '/admin/leads' },
