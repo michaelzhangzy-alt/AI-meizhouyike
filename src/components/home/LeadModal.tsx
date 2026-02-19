@@ -103,41 +103,38 @@ export function LeadModal({ isOpen, onClose, source, interestedCourse }: LeadMod
 
   if (isSuccess) {
     return (
-      <Modal isOpen={isOpen} onClose={handleClose} title="报名成功">
+      <Modal isOpen={isOpen} onClose={handleClose} title="获取成功">
         <div className="flex flex-col items-center justify-center py-6 text-center space-y-4">
           <CheckCircle2 className="h-16 w-16 text-green-500" />
           
-          {successType === 'paid' && qrInfo ? (
-             <div className="space-y-4 w-full">
-                <div>
-                    <h3 className="text-lg font-medium">尊贵的会员，欢迎回来！</h3>
-                    <p className="text-muted-foreground mt-2">
-                        请扫描下方二维码加入本期课程专属群，<br/>直播链接将在群内发布。
-                    </p>
-                </div>
-                <div className="flex justify-center">
-                    <div className="p-2 bg-white rounded-lg shadow-sm border">
-                         <img src={qrInfo.imageUrl} alt="Group QR" className="w-48 h-48 object-cover" />
-                    </div>
-                </div>
-                {(qrInfo.title || qrInfo.remark) && (
-                    <div className="text-sm text-gray-500">
-                        {qrInfo.title && <p className="font-medium">{qrInfo.title}</p>}
-                        {qrInfo.remark && <p>{qrInfo.remark}</p>}
-                    </div>
-                )}
-             </div>
-          ) : (
-             <div>
-                <h3 className="text-lg font-medium">感谢您的报名！</h3>
+          <div className="space-y-4 w-full">
+            <div>
+                <h3 className="text-lg font-medium">资料提取码已生成！</h3>
                 <p className="text-muted-foreground mt-2">
-                  我们将尽快安排助教与您联系，请保持手机/微信畅通。
+                    请扫描下方助教二维码，回复 <strong>"666"</strong><br/>
+                    即可自动获取本期课程源码及 PPT。
                 </p>
-             </div>
-          )}
+            </div>
+            <div className="flex justify-center">
+                <div className="p-2 bg-white rounded-lg shadow-sm border relative">
+                     {/* Placeholder QR Code - In production, this should be dynamic */}
+                     <img 
+                        src="https://api.dicebear.com/9.x/icons/svg?seed=QRCode&backgroundColor=transparent" 
+                        alt="Assistant QR" 
+                        className="w-48 h-48 object-cover opacity-50" 
+                     />
+                     <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm text-gray-500 font-bold rotate-12">（此处配置企业微信二维码）</span>
+                     </div>
+                </div>
+            </div>
+            <div className="text-sm text-gray-500 bg-gray-50 p-2 rounded">
+                <p>同时也已为您预留了本周直播课席位</p>
+            </div>
+         </div>
 
           <Button onClick={handleClose} className="w-full mt-4">
-            {successType === 'paid' ? '我已扫码，关闭' : '完成'}
+            我已扫码，关闭
           </Button>
         </div>
       </Modal>
@@ -148,8 +145,8 @@ export function LeadModal({ isOpen, onClose, source, interestedCourse }: LeadMod
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="立即报名"
-      description="填写下方信息，获取本周公开课名额"
+      title="免费领取资料"
+      description="输入手机号，立即获取本周课程源码与 PPT"
     >
       <form onSubmit={handleSubmit} className="space-y-4 py-2">
         <div className="space-y-2">
@@ -159,7 +156,7 @@ export function LeadModal({ isOpen, onClose, source, interestedCourse }: LeadMod
           <Input
             id="name"
             required
-            placeholder="请输入您的姓名"
+            placeholder="方便我们称呼您"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
@@ -173,27 +170,17 @@ export function LeadModal({ isOpen, onClose, source, interestedCourse }: LeadMod
             id="phone"
             required
             type="tel"
-            placeholder="请输入您的手机号"
+            placeholder="用于接收资料提取码"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="wechat" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            微信号 (选填)
-          </label>
-          <Input
-            id="wechat"
-            placeholder="方便助教添加好友"
-            value={formData.wechat}
-            onChange={(e) => setFormData({ ...formData, wechat: e.target.value })}
-          />
-        </div>
+        {/* WeChat field removed for simplification */}
 
         {interestedCourse && (
           <div className="text-sm text-muted-foreground bg-muted p-2 rounded">
-            意向课程：{interestedCourse}
+            领取资料：{interestedCourse}
           </div>
         )}
 
@@ -208,8 +195,8 @@ export function LeadModal({ isOpen, onClose, source, interestedCourse }: LeadMod
           <Button type="button" variant="outline" onClick={handleClose} className="mt-2 sm:mt-0">
             取消
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? '提交中...' : '确认报名'}
+          <Button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700">
+            {isSubmitting ? '提交中...' : '下一步：获取提取码'}
           </Button>
         </div>
       </form>

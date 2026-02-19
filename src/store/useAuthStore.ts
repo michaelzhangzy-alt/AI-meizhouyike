@@ -17,15 +17,27 @@ export const useAuthStore = create<AuthState>((set) => ({
   loading: true,
   initialize: async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      set({ session, user: session?.user ?? null, loading: false });
-
+      // 1. 启动监听器
       supabase.auth.onAuthStateChange((_event, session) => {
         set({ session, user: session?.user ?? null, loading: false });
       });
+
+      // 2. 获取初始 Session
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) throw error;
+
+      // 3. 更新状态 (如果监听器还没更新过)
+      set((state) => {
+        if (state.session) return state; // 监听器已经设置了 session，跳过
+        return { session, user: session?.user ?? null, loading: false };
+      });
+      
     } catch (error) {
       console.error('Auth initialization error:', error);
-      set({ loading: false });
+    } finally {
+      // 4. 兜底：确保 loading 结束
+      set((state) => ({ loading: false }));
     }
   },
   signOut: async () => {

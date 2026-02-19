@@ -6,7 +6,7 @@ import { usePublicLayoutContext } from '../components/layout/PublicLayout';
 import { SEO } from '../components/SEO';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Calendar, Users, MapPin, PlayCircle } from 'lucide-react';
+import { Calendar, Users, MapPin, PlayCircle, AlertCircle, RefreshCw, Inbox } from 'lucide-react';
 
 interface Course {
   id: string;
@@ -21,6 +21,7 @@ interface Course {
 export default function CourseList() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCourses();
@@ -29,17 +30,22 @@ export default function CourseList() {
   const fetchCourses = async () => {
     try {
       setLoading(true);
+      setError(null);
+
       // Fetch all published courses, ordered by date descending (newest first)
-      const { data, error } = await supabase
+      const query = supabase
         .from('courses')
         .select('id, title, description, cover_image, instructor, schedule_time, location')
         .eq('status', 'published')
         .order('schedule_time', { ascending: false });
 
+      const { data, error } = await query;
+
       if (error) throw error;
       setCourses(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching courses:', error);
+      setError(error.message || '加载失败');
     } finally {
       setLoading(false);
     }
@@ -60,9 +66,22 @@ export default function CourseList() {
              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
              <p className="mt-4 text-gray-500">加载中...</p>
           </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500 mb-4">
+              <AlertCircle className="w-8 h-8" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">课程加载失败</h3>
+            <p className="text-slate-500 mb-6 max-w-md text-center">{error === '请求超时' ? '网络连接较慢，请稍后重试' : '获取课程列表时遇到问题'}</p>
+            <Button onClick={fetchCourses} variant="outline" className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              重新加载
+            </Button>
+          </div>
         ) : courses.length === 0 ? (
-          <div className="text-center py-24 text-gray-500 bg-white rounded-xl shadow-sm">
-            暂无课程记录
+          <div className="flex flex-col items-center justify-center py-24 bg-white rounded-xl shadow-sm">
+            <Inbox className="w-12 h-12 text-slate-300 mb-4" />
+            <p className="text-gray-500 text-lg">暂无课程记录</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

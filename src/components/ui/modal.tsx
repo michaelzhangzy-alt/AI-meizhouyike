@@ -14,10 +14,10 @@ export function Modal({ isOpen, onClose, children, title, description }: ModalPr
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 sm:p-0">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 sm:p-0 backdrop-blur-sm">
       <div 
         className={cn(
-          "relative w-full max-w-lg rounded-lg border bg-background p-6 shadow-lg duration-200 animate-in fade-in zoom-in-95 sm:rounded-xl",
+          "relative w-full max-w-lg rounded-lg border bg-white p-6 shadow-xl duration-200 animate-in fade-in zoom-in-95 sm:rounded-xl",
           "max-h-[90vh] overflow-y-auto"
         )}
       >

@@ -5,6 +5,8 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Loader2, Sparkles, Copy, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { useShareLock } from '@/hooks/useShareLock';
+import { ShareLockModal } from '@/components/ui/share-lock-modal';
 
 export function XiaohongshuGenerator() {
   const [topic, setTopic] = useState('');
@@ -14,12 +16,28 @@ export function XiaohongshuGenerator() {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
 
+  // 引入分享锁 Hook
+  const { checkAccess, unlock, showLockModal, setShowLockModal } = useShareLock('xiaohongshu');
+
   const updateResult = (newText: string) => {
     setResult(prev => prev + newText);
   };
 
   const handleGenerate = async () => {
-    if (!topic) return;
+    console.log("点击生成按钮"); // Debug log
+    if (!topic) {
+        console.log("未输入主题，停止");
+        return;
+    }
+
+    // 1. 检查是否解锁
+    const hasAccess = checkAccess();
+    console.log("检查解锁状态:", hasAccess); // Debug log
+    
+    if (!hasAccess) {
+        console.log("未解锁，应弹出弹窗");
+        return;
+    }
 
     setIsLoading(true);
     setError('');
@@ -208,6 +226,20 @@ export function XiaohongshuGenerator() {
           )}
         </div>
       </Card>
+
+      {/* 分享解锁弹窗 - 回滚到稳定版 */}
+      {showLockModal && (
+        <div className="fixed inset-0 z-[9999] pointer-events-none flex justify-center items-center">
+            <div className="pointer-events-auto w-full max-w-lg">
+                <ShareLockModal 
+                    isOpen={true} 
+                    onClose={() => setShowLockModal(false)}
+                    onUnlock={unlock}
+                    title="解锁小红书生成器"
+                />
+            </div>
+        </div>
+      )}
     </div>
   );
 }

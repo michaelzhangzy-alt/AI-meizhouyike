@@ -2,14 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { ArrowRight, PlayCircle } from 'lucide-react';
+import { getFeaturedTools } from '../../features/ai-tools/data/tools';
 
 interface HeroProps {
   onRegister: () => void;
 }
 
 export function Hero({ onRegister }: HeroProps) {
+  const featuredTools = getFeaturedTools().slice(0, 3);
+
   return (
     <section className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-28 bg-white">
+
       {/* Background Subtle Pattern */}
       <div className="absolute inset-0 bg-subtle-grid [mask-image:radial-gradient(ellipse_at_center,white,transparent)] -z-10" />
       
@@ -72,6 +76,63 @@ export function Hero({ onRegister }: HeroProps) {
             </button>
           </Link>
         </div>
+
+        {/* AI Lab Section Integrated into Hero */}
+        <div className="mt-24 w-full max-w-5xl mx-auto text-left">
+           <div className="flex items-center justify-between mb-8 px-4">
+              <div>
+                  <div className="flex items-center gap-2 text-blue-600 font-bold mb-2">
+                      <span className="text-xl">🧪</span>
+                      <span className="uppercase tracking-wider text-sm">AI Lab</span>
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+                      热门黑科技 <span className="text-slate-400 font-normal ml-2 text-lg md:text-xl">| 大学生都在用</span>
+                  </h2>
+              </div>
+              <Link to="/ai-tools" className="text-sm font-medium text-slate-500 hover:text-blue-600 flex items-center">
+                  全部工具 <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+           </div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+              {featuredTools.map((tool) => (
+                <Link 
+                    key={tool.id} 
+                    to={tool.link.startsWith('http') ? '#' : tool.link}
+                    onClick={(e) => {
+                        if (tool.link.startsWith('http')) {
+                            e.preventDefault();
+                            window.open(tool.link, '_blank');
+                        }
+                    }}
+                    className="group block bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+                >
+                    {tool.badge && (
+                        <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">
+                            {tool.badge}
+                        </div>
+                    )}
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-lg bg-slate-50 flex items-center justify-center text-2xl">
+                            {tool.icon}
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                                {tool.title}
+                            </h3>
+                            <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded">
+                                {tool.category}
+                            </span>
+                        </div>
+                    </div>
+                    <p className="text-sm text-slate-500 line-clamp-2">
+                        {tool.desc}
+                    </p>
+                </Link>
+              ))}
+           </div>
+        </div>
+
       </div>
     </section>
   );

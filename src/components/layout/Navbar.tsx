@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '../../lib/utils';
+import { supabase } from '../../lib/supabase';
 
 interface NavbarProps {
   onRegisterClick?: () => void;
@@ -10,7 +11,48 @@ interface NavbarProps {
 
 export function Navbar({ onRegisterClick }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
   const location = useLocation();
+
+  useEffect(() => {
+    // Check current user
+    const checkUser = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+            setUser(session.user);
+            // Fetch profile for referral code
+            const { data } = await supabase
+                .from('profiles')
+                .select('referral_code')
+                .eq('id', session.user.id)
+                .single();
+            if (data) {
+                setReferralCode(data.referral_code);
+            }
+        }
+    };
+    checkUser();
+
+    // Listen for auth changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+             const { data } = await supabase
+                .from('profiles')
+                .select('referral_code')
+                .eq('id', session.user.id)
+                .single();
+            if (data) setReferralCode(data.referral_code);
+        } else {
+            setReferralCode(null);
+        }
+    });
+
+    return () => {
+        authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   const handleScrollTop = (path: string) => {
     if (location.pathname === path) {
@@ -53,12 +95,27 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
               {item.name}
             </Link>
           ))}
-          <button 
-            onClick={onRegisterClick}
-            className="primary-button text-sm"
-          >
-            立即报名
-          </button>
+          
+          {user ? (
+              <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                      <User className="w-4 h-4" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                      <span className="text-[10px] text-slate-500 leading-none">我的邀请码</span>
+                      <span className="text-xs font-bold text-slate-900 leading-none mt-1 font-mono tracking-wide">
+                          {referralCode || '...'}
+                      </span>
+                  </div>
+              </div>
+          ) : (
+            <button 
+                onClick={onRegisterClick}
+                className="primary-button text-sm"
+            >
+                立即报名
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Button - Hidden since we use MobileNav */}

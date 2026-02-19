@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Hero } from '../components/home/Hero';
+import { HomeAISection } from '../components/home/HomeAISection';
 import { QuickEntry } from '../components/home/QuickEntry';
 import { FeaturedContent } from '../components/home/FeaturedContent';
 import { ConversionSection } from '../components/home/ConversionSection';
@@ -13,6 +15,7 @@ const Home = () => {
     <>
       <SEO />
       <Hero onRegister={() => handleRegister('home_hero')} />
+      {/* <HomeAISection /> */}
       <QuickEntry />
       <FeaturedContent />
       <ConversionSection />
