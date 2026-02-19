@@ -57,23 +57,23 @@ const milestones = [
 
 export const HistoryTimeline = () => {
   return (
-    <section className="py-24 bg-white text-slate-900 overflow-hidden relative">
+    <section className="py-24 bg-background text-foreground overflow-hidden relative transition-colors duration-300">
       <div className="container relative z-10">
         <div className="text-center mb-20">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-black mb-4 text-slate-900 tracking-tight"
+            className="text-3xl md:text-5xl font-black mb-4 text-foreground tracking-tight"
           >
             发展历程
           </motion.h2>
-          <div className="h-1.5 w-12 bg-blue-600 mx-auto rounded-full" />
+          <div className="h-1.5 w-12 bg-primary mx-auto rounded-full" />
         </div>
 
         <div className="relative">
           {/* Vertical Line (Desktop) */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-slate-200" />
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-border" />
 
           <div className="space-y-12 md:space-y-24">
             {milestones.map((item, index) => (
@@ -89,14 +89,14 @@ export const HistoryTimeline = () => {
               >
                 {/* Content Card */}
                 <div className="w-full md:w-1/2 p-4 md:px-16">
-                  <div className="p-10 rounded-[2rem] bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 group">
+                  <div className="p-10 rounded-[2rem] bg-card border border-border hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 group">
                     <div className="flex items-center gap-4 mb-6">
-                      <span className="text-3xl md:text-4xl font-black text-blue-600/20 group-hover:text-blue-600 transition-colors duration-500">
+                      <span className="text-3xl md:text-4xl font-black text-primary/20 group-hover:text-primary transition-colors duration-500">
                         {item.year}
                       </span>
-                      <h3 className="text-xl font-bold text-slate-900">{item.title}</h3>
+                      <h3 className="text-xl font-bold text-foreground">{item.title}</h3>
                     </div>
-                    <p className="text-slate-600 leading-relaxed text-lg font-light">
+                    <p className="text-muted-foreground leading-relaxed text-lg font-light">
                       {item.description}
                     </p>
                   </div>
@@ -104,8 +104,8 @@ export const HistoryTimeline = () => {
 
                 {/* Center Circle */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center justify-center">
-                  <div className="w-14 h-14 rounded-2xl border-4 border-white bg-blue-600 flex items-center justify-center z-10 shadow-xl shadow-blue-200">
-                    <item.icon className="w-6 h-6 text-white" />
+                  <div className="w-14 h-14 rounded-2xl border-4 border-background bg-primary flex items-center justify-center z-10 shadow-xl shadow-primary/20">
+                    <item.icon className="w-6 h-6 text-primary-foreground" />
                   </div>
                 </div>
 

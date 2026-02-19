@@ -68,21 +68,21 @@ export function FeaturedContent() {
 
   if (loading) {
     return (
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-background transition-colors duration-300">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-16">
             {/* Skeleton for Courses */}
             <div className="lg:w-1/2">
               <div className="flex items-center justify-between mb-8">
-                <div className="h-8 w-32 bg-slate-100 rounded animate-pulse"></div>
+                <div className="h-8 w-32 bg-muted rounded animate-pulse"></div>
               </div>
               <div className="space-y-6">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="flex gap-5 p-2 -m-2">
-                    <div className="w-32 h-20 bg-slate-100 rounded-lg animate-pulse flex-shrink-0"></div>
+                    <div className="w-32 h-20 bg-muted rounded-lg animate-pulse flex-shrink-0"></div>
                     <div className="flex-1 flex flex-col justify-center space-y-3">
-                      <div className="h-5 bg-slate-100 rounded w-3/4 animate-pulse"></div>
-                      <div className="h-4 bg-slate-100 rounded w-1/4 animate-pulse"></div>
+                      <div className="h-5 bg-muted rounded w-3/4 animate-pulse"></div>
+                      <div className="h-4 bg-muted rounded w-1/4 animate-pulse"></div>
                     </div>
                   </div>
                 ))}
@@ -92,15 +92,15 @@ export function FeaturedContent() {
             {/* Skeleton for News */}
             <div className="lg:w-1/2">
               <div className="flex items-center justify-between mb-8">
-                <div className="h-8 w-32 bg-slate-100 rounded animate-pulse"></div>
+                <div className="h-8 w-32 bg-muted rounded animate-pulse"></div>
               </div>
               <div className="space-y-6">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="flex gap-5 p-2 -m-2">
-                    <div className="w-32 h-20 bg-slate-100 rounded-lg animate-pulse flex-shrink-0"></div>
+                    <div className="w-32 h-20 bg-muted rounded-lg animate-pulse flex-shrink-0"></div>
                     <div className="flex-1 flex flex-col justify-center space-y-3">
-                      <div className="h-5 bg-slate-100 rounded w-3/4 animate-pulse"></div>
-                      <div className="h-4 bg-slate-100 rounded w-1/4 animate-pulse"></div>
+                      <div className="h-5 bg-muted rounded w-3/4 animate-pulse"></div>
+                      <div className="h-4 bg-muted rounded w-1/4 animate-pulse"></div>
                     </div>
                   </div>
                 ))}
@@ -114,13 +114,13 @@ export function FeaturedContent() {
 
   if (error) {
     return (
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-background transition-colors duration-300">
         <div className="container mx-auto px-4 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 text-destructive mb-4">
             <AlertCircle className="w-8 h-8" />
           </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">内容加载失败</h3>
-          <p className="text-slate-500 mb-6 max-w-md mx-auto">{error === '请求超时' ? '网络连接较慢，请稍后重试' : '获取最新课程和资讯时遇到问题'}</p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">内容加载失败</h3>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">{error === '请求超时' ? '网络连接较慢，请稍后重试' : '获取最新课程和资讯时遇到问题'}</p>
           <Button onClick={fetchData} variant="outline" className="gap-2">
             <RefreshCw className="w-4 h-4" />
             重新加载
@@ -131,30 +131,30 @@ export function FeaturedContent() {
   }
 
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section className="py-16 md:py-24 bg-background transition-colors duration-300">
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-16">
           
           {/* Latest Courses Column */}
           <div className="lg:w-1/2">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-slate-900">最新直播课</h2>
-              <Link to="/weekly-class" className="text-blue-600 hover:text-blue-700 text-sm font-semibold flex items-center group">
+              <h2 className="text-2xl font-bold text-foreground">最新直播课</h2>
+              <Link to="/weekly-class" className="text-primary hover:text-primary/80 text-sm font-semibold flex items-center group">
                 查看全部 <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             {courses.length > 0 ? (
               <div className="space-y-6">
                 {courses.map(course => (
-                  <Link key={course.id} to={`/courses/${course.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-slate-50 transition-colors">
-                    <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+                  <Link key={course.id} to={`/courses/${course.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-muted/50 transition-colors">
+                    <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border">
                       <img src={course.cover_image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <h3 className="font-bold text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">
+                      <h3 className="font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors mb-2">
                         {course.title}
                       </h3>
-                      <div className="flex items-center text-xs text-slate-400">
+                      <div className="flex items-center text-xs text-muted-foreground">
                         <Calendar className="w-3.5 h-3.5 mr-1.5" />
                         {new Date(course.schedule_time).toLocaleDateString()}
                       </div>
@@ -163,9 +163,9 @@ export function FeaturedContent() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                <Inbox className="w-10 h-10 text-slate-300 mb-3" />
-                <p className="text-slate-500 text-sm">暂无发布的课程</p>
+              <div className="flex flex-col items-center justify-center py-12 bg-card rounded-xl border border-dashed border-border">
+                <Inbox className="w-10 h-10 text-muted-foreground/50 mb-3" />
+                <p className="text-muted-foreground text-sm">暂无发布的课程</p>
               </div>
             )}
           </div>
@@ -173,29 +173,29 @@ export function FeaturedContent() {
           {/* Latest News Column */}
           <div className="lg:w-1/2">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-slate-900">最新资讯</h2>
-              <Link to="/news" className="text-blue-600 hover:text-blue-700 text-sm font-semibold flex items-center group">
+              <h2 className="text-2xl font-bold text-foreground">最新资讯</h2>
+              <Link to="/news" className="text-primary hover:text-primary/80 text-sm font-semibold flex items-center group">
                 阅读更多 <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             {articles.length > 0 ? (
               <div className="space-y-6">
                 {articles.map(article => (
-                  <Link key={article.id} to={`/news/${article.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-slate-50 transition-colors">
-                    <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+                  <Link key={article.id} to={`/news/${article.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-muted/50 transition-colors">
+                    <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border">
                        <img src={article.cover_image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <h3 className="font-bold text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">
+                      <h3 className="font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors mb-2">
                         {article.title}
                       </h3>
-                      <div className="flex items-center text-xs text-slate-400 gap-4">
+                      <div className="flex items-center text-xs text-muted-foreground gap-4">
                         <span className="flex items-center">
                           <Calendar className="w-3.5 h-3.5 mr-1.5" />
                           {new Date(article.created_at).toLocaleDateString()}
                         </span>
                         {article.type === 'external' && (
-                          <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[10px] font-medium">导读</span>
+                          <span className="bg-muted text-muted-foreground px-2 py-0.5 rounded text-[10px] font-medium">导读</span>
                         )}
                       </div>
                     </div>
@@ -203,9 +203,9 @@ export function FeaturedContent() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                <Inbox className="w-10 h-10 text-slate-300 mb-3" />
-                <p className="text-slate-500 text-sm">暂无发布的资讯</p>
+              <div className="flex flex-col items-center justify-center py-12 bg-card rounded-xl border border-dashed border-border">
+                <Inbox className="w-10 h-10 text-muted-foreground/50 mb-3" />
+                <p className="text-muted-foreground text-sm">暂无发布的资讯</p>
               </div>
             )}
           </div>

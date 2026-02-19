@@ -11,6 +11,7 @@ import WeeklyClass from './pages/WeeklyClass';
 import AiToolsHome from './features/ai-tools/pages/AiToolsHome';
 import AiToolDetail from './features/ai-tools/pages/AiToolDetail';
 import { FortuneTeller } from './features/ai-tools/components/tools/FortuneTeller';
+import ConsoleUI from './components/console/ConsoleUI';
 import ScrollToTop from './components/layout/ScrollToTop';
 import { PublicLayout } from './components/layout/PublicLayout';
 
@@ -43,9 +44,12 @@ function AppContent() {
     <>
       <ScrollToTop />
       <Routes>
+        {/* Console UI Root */}
+        <Route path="/" element={<ConsoleUI />} />
+
         {/* Public Routes */}
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/news" element={<News />} />
           <Route path="/news/:id" element={<NewsDetail />} />

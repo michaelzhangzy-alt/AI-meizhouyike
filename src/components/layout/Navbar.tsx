@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X, User, Sun, Moon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '../../lib/utils';
 import { supabase } from '../../lib/supabase';
+import { useTheme } from '../../hooks/useTheme';
 
 interface NavbarProps {
   onRegisterClick?: () => void;
@@ -14,6 +15,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
   const [user, setUser] = useState<any>(null);
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     // Check current user
@@ -61,7 +63,8 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
   };
 
   const navItems = [
-    { name: '首页', path: '/' },
+    { name: '首页', path: '/home' },
+    { name: 'Console', path: '/' },
     { name: '本周直播课', path: '/weekly-class' },
     { name: '往期回看', path: '/courses' },
     { name: 'AI 工具', path: '/ai-tools' },
@@ -70,11 +73,11 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/80 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md transition-colors duration-300">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2" onClick={() => handleScrollTop('/')}>
-          <span className="text-xl font-bold tracking-tight text-slate-900">
-            优尼克斯 <span className="text-blue-600">|</span> AI 周课
+          <span className="text-xl font-bold tracking-tight text-foreground">
+            优尼克斯 <span className="text-primary">|</span> AI 周课
           </span>
         </Link>
 
@@ -85,10 +88,10 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
               key={item.path}
               to={item.path}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-blue-600",
+                "text-sm font-medium transition-colors hover:text-primary",
                 location.pathname === item.path
-                  ? "text-blue-600"
-                  : "text-slate-500"
+                  ? "text-primary"
+                  : "text-muted-foreground"
               )}
               onClick={() => handleScrollTop(item.path)}
             >
@@ -97,13 +100,13 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
           ))}
           
           {user ? (
-              <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+              <div className="flex items-center gap-3 bg-muted px-3 py-1.5 rounded-full border border-border">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                       <User className="w-4 h-4" />
                   </div>
                   <div className="flex flex-col text-left">
-                      <span className="text-[10px] text-slate-500 leading-none">我的邀请码</span>
-                      <span className="text-xs font-bold text-slate-900 leading-none mt-1 font-mono tracking-wide">
+                      <span className="text-[10px] text-muted-foreground leading-none">我的邀请码</span>
+                      <span className="text-xs font-bold text-foreground leading-none mt-1 font-mono tracking-wide">
                           {referralCode || '...'}
                       </span>
                   </div>
@@ -116,6 +119,14 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
                 立即报名
             </button>
           )}
+
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
         </div>
 
         {/* Mobile Menu Button - Hidden since we use MobileNav */}
@@ -137,7 +148,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
 
       {/* Mobile Nav */}
       {isOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white p-4 space-y-4">
+        <div className="md:hidden border-t border-border bg-background p-4 space-y-4">
           <div className="flex flex-col space-y-4">
             {navItems.map((item) => (
               <Link
@@ -146,8 +157,8 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
                 className={cn(
                   "text-base font-medium transition-colors py-2",
                   location.pathname === item.path
-                    ? "text-blue-600"
-                    : "text-slate-600 hover:text-blue-600"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
                 )}
                 onClick={() => {
                   setIsOpen(false);

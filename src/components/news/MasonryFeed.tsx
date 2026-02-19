@@ -21,7 +21,7 @@ export function MasonryFeed({ articles }: MasonryFeedProps) {
       {articles.map((article) => (
         <div key={article.id} className="break-inside-avoid relative group">
           <Link to={`/news/${article.id}`} className="block">
-            <div className="relative rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:shadow-slate-200/50 group-hover:-translate-y-1">
+            <div className="relative rounded-2xl overflow-hidden bg-card border border-border shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:shadow-primary/10 group-hover:-translate-y-1">
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img 
@@ -36,8 +36,8 @@ export function MasonryFeed({ articles }: MasonryFeedProps) {
                   <span className={`
                     px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-sm
                     ${article.type === 'original' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-white/90 text-slate-900'
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'bg-background/90 text-foreground'
                     }
                   `}>
                     {article.type === 'original' ? 'ORIGINAL' : 'LINK'}
@@ -47,26 +47,26 @@ export function MasonryFeed({ articles }: MasonryFeedProps) {
 
               {/* Content */}
               <div className="p-5">
-                <h3 className="text-lg font-bold text-slate-900 mb-3 leading-snug group-hover:text-blue-600 transition-colors">
+                <h3 className="text-lg font-bold text-foreground mb-3 leading-snug group-hover:text-primary transition-colors">
                   {article.title}
                 </h3>
                 
                 {/* Meta Footer with Interactions */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-50">
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
                   <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+                    <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center overflow-hidden">
                       <img 
                         src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${article.id}&backgroundColor=e2e8f0`} 
                         alt="Author" 
                         className="w-full h-full"
                       />
                     </div>
-                    <span className="text-xs text-slate-500 font-medium">UNIXTECH</span>
+                    <span className="text-xs text-muted-foreground font-medium">UNIXTECH</span>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <button 
-                      className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-blue-600 transition-colors"
+                      className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-primary transition-colors"
                       onClick={(e) => {
                         e.preventDefault();
                         // Handle share
@@ -75,7 +75,7 @@ export function MasonryFeed({ articles }: MasonryFeedProps) {
                       <Share2 className="w-4 h-4" />
                     </button>
                     <button 
-                      className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-blue-600 transition-colors"
+                      className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-primary transition-colors"
                       onClick={(e) => {
                         e.preventDefault();
                         // Handle bookmark

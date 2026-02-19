@@ -84,13 +84,13 @@ export default function News() {
   }, [filterType]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background transition-colors duration-300">
       <SEO title="AI 资讯 - 优尼克斯教育" description="关注人工智能前沿动态与学员精彩案例" />
       
       <main className="container mx-auto px-4 py-8 md:py-12">
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">AI 行业资讯</h1>
-          <p className="text-lg text-slate-500 mb-8 font-light">精选全球 AI 前沿动态，助你保持技术敏锐度</p>
+          <h1 className="text-3xl md:text-5xl font-black text-foreground mb-6 tracking-tight">AI 行业资讯</h1>
+          <p className="text-lg text-muted-foreground mb-8 font-light">精选全球 AI 前沿动态，助你保持技术敏锐度</p>
           
           {/* Carousel - 独立显示，不受列表 loading 状态影响 */}
           {featuredArticles.length > 0 && (
@@ -110,8 +110,8 @@ export default function News() {
                 className={`
                   px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap
                   ${filterType === tab.id 
-                    ? 'bg-slate-900 text-white shadow-lg shadow-slate-200 transform scale-105' 
-                    : 'bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 transform scale-105' 
+                    : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground'
                   }
                 `}
               >
@@ -124,25 +124,25 @@ export default function News() {
         {loading ? (
           <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
              {[1,2,3,4,5,6].map(i => (
-               <div key={i} className="bg-slate-100 rounded-2xl h-64 animate-pulse break-inside-avoid" />
+               <div key={i} className="bg-muted rounded-2xl h-64 animate-pulse break-inside-avoid" />
              ))}
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 text-red-500 mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 text-destructive mb-4">
               <AlertCircle className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">内容加载失败</h3>
-            <p className="text-slate-500 mb-6 max-w-md text-center">{error === '请求超时' ? '网络连接较慢，请稍后重试' : '获取资讯列表时遇到问题'}</p>
+            <h3 className="text-lg font-semibold text-foreground mb-2">内容加载失败</h3>
+            <p className="text-muted-foreground mb-6 max-w-md text-center">{error === '请求超时' ? '网络连接较慢，请稍后重试' : '获取资讯列表时遇到问题'}</p>
             <Button onClick={() => setFilterType(prev => prev)} variant="outline" className="gap-2">
               <RefreshCw className="w-4 h-4" />
               重新加载
             </Button>
           </div>
         ) : articles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-            <Inbox className="w-12 h-12 text-slate-300 mb-4" />
-            <p className="text-slate-500 text-lg">暂无相关资讯</p>
+          <div className="flex flex-col items-center justify-center py-24 bg-card rounded-xl border border-dashed border-border">
+            <Inbox className="w-12 h-12 text-muted-foreground/50 mb-4" />
+            <p className="text-muted-foreground text-lg">暂无相关资讯</p>
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">

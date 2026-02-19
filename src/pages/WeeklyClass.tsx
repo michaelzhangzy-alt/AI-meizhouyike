@@ -52,7 +52,7 @@ export default function WeeklyClass() {
   const pastCourses = courses.filter(c => new Date(c.schedule_time) < now).reverse(); // Show most recent past first
 
   const CourseCard = ({ course, isPast }: { course: Course; isPast: boolean }) => (
-    <div className={`bg-white rounded-xl border overflow-hidden flex flex-col md:flex-row ${isPast ? 'opacity-80' : 'shadow-sm hover:shadow-md'} transition-all`}>
+    <div className={`bg-card rounded-xl border border-border overflow-hidden flex flex-col md:flex-row ${isPast ? 'opacity-80' : 'shadow-sm hover:shadow-md'} transition-all`}>
       <div className="md:w-1/3 h-48 md:h-auto relative">
         <img 
           src={course.cover_image} 
@@ -66,22 +66,22 @@ export default function WeeklyClass() {
         )}
       </div>
       <div className="p-6 md:w-2/3 flex flex-col">
-        <div className="flex items-center text-sm text-gray-500 mb-2 gap-4">
+        <div className="flex items-center text-sm text-muted-foreground mb-2 gap-4">
           <div className="flex items-center">
-             <Calendar className="w-4 h-4 mr-1 text-blue-600" />
+             <Calendar className="w-4 h-4 mr-1 text-primary" />
              {new Date(course.schedule_time).toLocaleDateString()} {new Date(course.schedule_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
           </div>
           <div className="flex items-center">
-             <Users className="w-4 h-4 mr-1 text-blue-600" />
+             <Users className="w-4 h-4 mr-1 text-primary" />
              {course.instructor}
           </div>
         </div>
         
-        <h3 className="text-xl font-bold text-gray-900 mb-2">{course.title}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-1">{course.description}</p>
+        <h3 className="text-xl font-bold text-foreground mb-2">{course.title}</h3>
+        <p className="text-muted-foreground text-sm mb-4 line-clamp-2 flex-1">{course.description}</p>
         
-        <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-           <div className="flex items-center text-sm text-gray-500">
+        <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
+           <div className="flex items-center text-sm text-muted-foreground">
              <MapPin className="w-4 h-4 mr-1" />
              {course.location}
            </div>
@@ -101,23 +101,23 @@ export default function WeeklyClass() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background transition-colors duration-300">
       <SEO title="本周直播课 - 优尼克斯教育" description="查看本周最新的AI直播课程安排" />
       
       <main className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">本周直播课</h1>
-          <p className="text-xl text-gray-600">每周一节实战课，跟上 AI 时代步伐</p>
+          <h1 className="text-4xl font-bold text-foreground mb-4">本周直播课</h1>
+          <p className="text-xl text-muted-foreground">每周一节实战课，跟上 AI 时代步伐</p>
         </div>
 
         {loading ? (
-          <div className="text-center py-12">加载中...</div>
+          <div className="text-center py-12 text-muted-foreground">加载中...</div>
         ) : (
           <div className="space-y-12 max-w-4xl mx-auto">
             {/* Upcoming Section */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <span className="w-2 h-8 bg-blue-600 rounded-full mr-3"></span>
+              <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center">
+                <span className="w-2 h-8 bg-primary rounded-full mr-3"></span>
                 即将开始
               </h2>
               {upcomingCourses.length > 0 ? (
@@ -127,8 +127,8 @@ export default function WeeklyClass() {
                   ))}
                 </div>
               ) : (
-                <div className="bg-white rounded-xl p-8 text-center border border-dashed border-gray-300">
-                  <p className="text-gray-500 mb-4">本周暂无直播安排，敬请期待</p>
+                <div className="bg-card rounded-xl p-8 text-center border border-dashed border-border">
+                  <p className="text-muted-foreground mb-4">本周暂无直播安排，敬请期待</p>
                   <Link to="/news">
                     <Button variant="outline">浏览 AI 资讯</Button>
                   </Link>
@@ -139,8 +139,8 @@ export default function WeeklyClass() {
             {/* Past Section */}
             {pastCourses.length > 0 && (
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <span className="w-2 h-8 bg-gray-300 rounded-full mr-3"></span>
+                <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center">
+                  <span className="w-2 h-8 bg-muted rounded-full mr-3"></span>
                   往期回顾
                 </h2>
                 <div className="space-y-6">
@@ -150,7 +150,7 @@ export default function WeeklyClass() {
                 </div>
                 <div className="mt-8 text-center">
                    <Link to="/courses">
-                      <Button variant="ghost" className="text-gray-500 hover:text-gray-900">
+                      <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                         查看更多往期课程 <ChevronRight className="w-4 h-4 ml-1" />
                       </Button>
                    </Link>
