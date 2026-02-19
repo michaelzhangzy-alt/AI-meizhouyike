@@ -216,7 +216,7 @@ const Screen = ({ activeIndex, onNext, onPrev }: { activeIndex: number; onNext: 
     );
 };
 
-import ConsoleUIMobile from "./ConsoleUIMobile";
+
 
 export default function ConsoleUI() {
     const [activeIndex, setActiveIndex] = useState(0);
