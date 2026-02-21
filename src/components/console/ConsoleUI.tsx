@@ -276,12 +276,15 @@ export default function ConsoleUI() {
             </AnimatePresence>
 
             {/* Universal Layout (Mobile & Desktop) */}
-            <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-black p-2 md:p-4 transition-colors duration-300 overflow-hidden">
+            <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-black p-2 md:p-4 transition-colors duration-300 overflow-hidden w-full h-screen fixed inset-0">
                 {/* 
-                    Scale container for small screens to fit the wide aspect ratio.
-                    On mobile, it might look small, but it preserves the layout.
+                    Force Landscape Logic for Mobile:
+                    - Rotate 90deg on portrait screens
+                    - Swap width/height to fit viewport
+                    - Fixed positioning to center in viewport
                 */}
-                <div className="relative w-full max-w-7xl aspect-[2.4/1] bg-gray-100 dark:bg-[#1a1a1a] rounded-[20px] md:rounded-[40px] p-1 md:p-8 shadow-[10px_10px_30px_#d1d5db,-10px_-10px_30px_#ffffff] md:shadow-[20px_20px_60px_#d1d5db,-20px_-20px_60px_#ffffff] dark:shadow-[10px_10px_30px_#121212,-10px_-10px_30px_#222222] dark:md:shadow-[20px_20px_60px_#121212,-20px_-20px_60px_#222222] flex items-center justify-between gap-1 md:gap-8 border border-white/50 dark:border-white/5 select-none overflow-hidden transition-all duration-300 transform scale-100 origin-center">
+                <div className="relative w-full max-w-7xl aspect-[2.4/1] bg-gray-100 dark:bg-[#1a1a1a] rounded-[20px] md:rounded-[40px] p-1 md:p-8 shadow-[10px_10px_30px_#d1d5db,-10px_-10px_30px_#ffffff] md:shadow-[20px_20px_60px_#d1d5db,-20px_-20px_60px_#ffffff] dark:shadow-[10px_10px_30px_#121212,-10px_-10px_30px_#222222] dark:md:shadow-[20px_20px_60px_#121212,-20px_-20px_60px_#222222] flex items-center justify-between gap-1 md:gap-8 border border-white/50 dark:border-white/5 select-none overflow-hidden transition-all duration-300 transform scale-100 origin-center 
+                landscape:rotate-0 portrait:fixed portrait:top-1/2 portrait:left-1/2 portrait:-translate-x-1/2 portrait:-translate-y-1/2 portrait:rotate-90 portrait:w-[100vh] portrait:h-[100vw] portrait:scale-[0.85]">
                     
                     {/* Left Section - Extreme Mobile Compression */}
                     <div className="flex flex-col items-center justify-center gap-2 md:gap-12 w-[70px] md:w-[12%] h-full pt-2 md:pt-8 flex-shrink-0">
