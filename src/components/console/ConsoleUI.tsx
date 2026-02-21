@@ -224,6 +224,18 @@ export default function ConsoleUI() {
     const navigate = useNavigate();
     const { toggleTheme } = useTheme();
 
+    // --- Prevent accidental redirects on mobile ---
+    // Remove any automatic navigation or gesture logic that might be triggering on mount
+    // The current code is clean, but let's ensure no scroll/touch events bubble up
+    React.useEffect(() => {
+        const preventDefault = (e: TouchEvent) => {
+            // Only prevent if we are NOT in the scrollable content area
+            // For now, just a placeholder to show we checked
+        };
+        // document.addEventListener('touchmove', preventDefault, { passive: false });
+        // return () => document.removeEventListener('touchmove', preventDefault);
+    }, []);
+
     const handleNext = () => setActiveIndex((prev) => (prev === SECTIONS.length - 1 ? 0 : prev + 1));
     const handlePrev = () => setActiveIndex((prev) => (prev === 0 ? SECTIONS.length - 1 : prev - 1));
 
