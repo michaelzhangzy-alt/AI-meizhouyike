@@ -25,7 +25,7 @@ export function Hero({ onRegister }: HeroProps) {
           <span className="text-xs font-semibold text-primary tracking-wide">本周直播课程已发布</span>
         </div>
 
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl mb-8 text-foreground">
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-6xl md:text-7xl mb-8 text-foreground">
           <span className="block mb-2">AI 时代</span>
           <span className="block text-primary">重新定义你的核心竞争力</span>
         </h1>

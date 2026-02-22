@@ -139,7 +139,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
         <div className="md:hidden">
           <button 
             onClick={onRegisterClick}
-            className="primary-button text-xs px-4 py-2 h-9"
+            className="primary-button text-xs px-2 sm:px-4 py-2 h-9"
           >
             立即报名
           </button>
