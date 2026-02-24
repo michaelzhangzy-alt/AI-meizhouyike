@@ -44,16 +44,16 @@ export function Teachers({ onRegister }: TeachersProps) {
   if (loading) return null; // Or a loading spinner
 
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-16 md:py-24 bg-background transition-colors duration-300">
       <div className="container">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">师资力量</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 text-foreground">师资力量</h2>
           <p className="text-lg text-muted-foreground">来自大厂的实战专家，为你领路</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {teachers.map((teacher) => (
-            <Card key={teacher.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+            <Card key={teacher.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 bg-card border-border">
               <div className="aspect-square w-full relative bg-muted">
                  {teacher.image_url ? (
                    <img 
@@ -62,7 +62,7 @@ export function Teachers({ onRegister }: TeachersProps) {
                      className="object-cover w-full h-full"
                    />
                  ) : (
-                   <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                   <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
                      暂无照片
                    </div>
                  )}
@@ -70,12 +70,12 @@ export function Teachers({ onRegister }: TeachersProps) {
               <CardHeader>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {teacher.tags?.map((tag, i) => (
-                    <span key={i} className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-full">
+                    <span key={i} className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full border border-border">
                       {tag}
                     </span>
                   ))}
                 </div>
-                <h3 className="text-xl font-bold">{teacher.name}</h3>
+                <h3 className="text-xl font-bold text-foreground">{teacher.name}</h3>
                 <p className="text-sm font-medium text-primary">{teacher.title}</p>
               </CardHeader>
               <CardContent>

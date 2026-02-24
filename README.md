@@ -1,115 +1,88 @@
-# unixtech-xyz (v1.0.0)
+# unixtech-xyz
 
-> **"公开课引流 + 内容沉淀 + AI 效率工具 + 后台运营提效" 的一体化教育官网平台。**
+公开课引流 + 内容沉淀 + AI 工具 + 后台运营的一体化教育官网平台。
 
-![Status](https://img.shields.io/badge/Status-Production%20Ready-green) ![Tech](https://img.shields.io/badge/Tech-React%20%7C%20Supabase%20%7C%20Coze-blue)
+## 子系统
 
-## 🌟 核心功能亮点
+- 前台（Public）：课程/资讯/关于我们/AI 工具、报名留资、微信分享
+- 后台（Admin CMS）：课程/资讯/师资管理、线索导出、分享配置、站点内容、付费会员与群二维码管理
 
-### 🤖 AI 智能体矩阵 (New in v1.0)
-集成了 Coze V3 智能体能力，通过 **Proxy Stream + Eventsource Parser** 架构实现企业级流式体验。
-*   **科学算运势**：输入生辰八字，AI 实时推演流年运势，支持打字机效果，零延迟、无乱码。
-*   **小红书爆款文案**：输入主题与关键词，自动生成 Emoji 丰富、语气活泼的种草文案，一键复制。
+## 快速开始
 
-### 🎨 视觉体验升级 (Minimalist Cyber)
-*   **简约极客风**：全站 UI 重构，采用清爽的紫色/红色/蓝色调区分不同板块。
-*   **移动端适配**：精心打磨的响应式布局，在手机端也能获得原生 App 般的体验。
+### 1) 安装依赖
 
-### 📚 内容生态系统
-*   **公开课/直播课**：支持往期回放、本周直播预告、自动跳转最近课程。
-*   **AI 资讯**：支持富文本文章展示，独创“外链导读”模式，无缝跳转外部优质资源。
-
-### ⚙️ 运营中台 (Admin CMS)
-*   **线索管理**：实时查看报名数据，支持 Excel 一键导出。
-*   **内容发布**：所见即所得的富文本编辑器（TinyMCE），支持图片裁剪与上传。
-*   **微信分享**：按页面路径动态配置分享卡片（标题/描述/图片），无需开发介入。
-
----
-
-## 🛠 技术架构
-
-### 前端 (Frontend)
-*   **框架**：React 18 + Vite
-*   **语言**：TypeScript
-*   **样式**：TailwindCSS + Framer Motion
-*   **状态**：Zustand
-*   **AI 流处理**：`eventsource-parser`
-
-### 后端 (Backend as a Service)
-*   **服务**：Supabase
-*   **数据库**：Postgres (启用 RLS 行级安全策略)
-*   **存储**：Supabase Storage (图片资源)
-*   **计算**：Edge Functions (Deno) - 处理 AI 代理与微信签名
-
----
-
-## 🚀 快速开始
-
-### 1. 环境准备
-确保本地已安装 Node.js (v18+) 和 Git。
-
-### 2. 安装依赖
 ```bash
-git clone https://github.com/your-repo/unixtech-xyz.git
-cd unixtech-xyz
 npm install
 ```
 
-### 3. 配置环境变量
-复制 `.env.example` 为 `.env`，并填入 Supabase 公钥：
+### 2) 配置环境变量（本地）
+
+在项目根目录创建 `.env`（或使用 Vite 支持的 `.env.local`），至少需要：
+
 ```bash
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
 ```
 
-### 4. 启动开发服务器
+注意：不要在仓库中提交任何密钥/服务端 Key。线上环境变量由 Vercel/Supabase 配置注入。
+
+### 3) 本地启动
+
 ```bash
 npm run dev
 ```
-访问 `http://localhost:5173` 查看前台，访问 `/admin/login` 进入后台。
 
----
+- 前台：`http://localhost:5173/`
+- 后台登录：`/admin/login`
 
-## 📂 目录结构说明
+### 4) 构建与本地预览（可选）
 
 ```bash
-src/
-├── features/           # 🤖 核心业务模块
-│   └── ai-tools/       # AI 工具箱 (FortuneTeller, Xiaohongshu...)
-├── components/         # 🧩 通用组件
-│   ├── ui/             # 基础 UI 库 (Button, Card, Input...)
-│   └── layout/         # 布局组件
-├── pages/              # 📄 页面路由
-│   ├── admin/          # 后台管理页
-│   └── ...             # 前台展示页
-└── lib/                # 🛠 工具函数 (supabase client)
-
-supabase/
-├── functions/          # ⚡ Edge Functions (后端逻辑)
-│   ├── fortune-teller/ # 通用 AI 代理接口 (Stable)
-│   └── ...
-└── migrations/         # 🗄 数据库变更记录
+npm run build
+npm run preview
 ```
 
-## 🔒 安全说明
+## 环境变量说明
 
-*   **API Key 保护**：所有第三方 API Key (Coze, WeChat) 均存储在后端环境变量中，前端无法获取。
-*   **数据权限**：
-    *   `leads` 表：允许匿名写入（报名），严禁匿名读取。
-    *   `paid_members` 表：仅后台登录用户可读写。
+- `VITE_SUPABASE_URL`：Supabase Project URL（前端连接入口）
+- `VITE_SUPABASE_ANON_KEY`：Supabase anon key（前端使用的公开 key）
 
-## 📦 部署指南
+与微信/AI 相关的敏感密钥应通过 Supabase Edge Functions 的 Secrets 或平台环境变量注入（不要前端直传/不要硬编码）。
 
-本项目针对 **Vercel** 进行了优化配置：
-1.  将代码推送到 GitHub。
-2.  在 Vercel 中导入仓库。
-3.  在 Vercel Settings 中配置环境变量 (`VITE_SUPABASE_...`)。
-4.  点击 Deploy，即可自动构建上线。
+## 目录结构（关键部分）
 
----
+- `src/App.tsx`：路由入口（前台/后台路由与懒加载）
+- `src/pages`：前台页面（Home/News/Courses/WeeklyClass/About 等）
+- `src/pages/admin`：后台页面（登录、内容管理、线索、配置等）
+- `src/components`：通用组件（layout 与业务组件）
+- `src/features/ai-tools`：AI 工具模块（营销页、工具页、本地 Markdown 内容）
+- `src/store`：Zustand 状态（登录态、列表缓存）
+- `src/hooks`：横切能力（主题、微信分享、分享锁等）
+- `src/lib/supabase.ts`：Supabase client 初始化
+- `supabase/migrations`：数据库 schema / RLS / storage buckets / RPC
+- `supabase/functions`：Edge Functions（微信签名、AI 代理等）
 
-## 📝 版本日志
-详见 [CHANGELOG.md](./CHANGELOG.md)
-*   **v1.0.0**: AI 智能体全面稳定版 (Current)
-*   **v0.8.0**: AI 工具箱上线
-*   **v0.5.0**: MVP 发布
+## 常见问题（FAQ）
+
+- 本地启动提示缺少 Supabase 环境变量：确认 `.env` 已配置 `VITE_SUPABASE_URL` 与 `VITE_SUPABASE_ANON_KEY`。
+- 刷新任意路由 404：生产部署需要 SPA rewrite（Vercel 已通过 `vercel.json` 配置）。
+- 微信分享在本地不生效：本地（localhost）会跳过签名拉取；需线上域名且在公众号后台配置 JS 安全域名。
+- 动态路由分享配置（如 `/news/:id`）不命中：当前分享配置以精确路径匹配为主，建议阶段二引入前缀/规则匹配。
+- 线索隐私：产品目标通常是“允许匿名写入，不允许匿名读取”；请对照 Supabase RLS 策略进行安全验收。
+
+## 部署入口与注意事项
+
+- Vercel：
+  - `npm run build` 构建
+  - 配置环境变量 `VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY`
+  - 保持 SPA rewrite（见 `vercel.json`）
+- Supabase：
+  - 迁移（`supabase/migrations`）包含表结构/RLS/Storage 策略
+  - Edge Functions 需要配置 Secrets（微信、AI 等第三方密钥）
+
+## 相关文档
+
+- [CONTENT_MAP.md](./CONTENT_MAP.md)
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+- [PRD.md](./PRD.md)
+- [CHANGELOG.md](./CHANGELOG.md)

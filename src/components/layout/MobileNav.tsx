@@ -7,7 +7,7 @@ export function MobileNav() {
   const location = useLocation();
 
   const navItems = [
-    { name: '首页', path: '/', icon: Home },
+    { name: '首页', path: '/home', icon: Home },
     { name: '直播课', path: '/weekly-class', icon: PlayCircle },
     { name: '工具', path: '/ai-tools', icon: Wrench },
     { name: '资讯', path: '/news', icon: Newspaper },

@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { XiaohongshuGenerator } from '../components/tools/XiaohongshuGenerator';
+import { ArrowLeft } from 'lucide-react';
 
 // Simple frontmatter parser to avoid node Buffer dependency issues in browser
 function parseFrontmatter(markdown: string) {
@@ -82,46 +83,56 @@ export default function AiToolDetail() {
   }, [slug]);
 
   if (loading) {
-    return <div className="container mx-auto py-10 px-6">Loading...</div>;
+    return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground transition-colors duration-300">加载中...</div>;
   }
 
   if (error && content === '# Tool not found') {
       return (
-          <div className="container mx-auto py-10 px-6 text-center">
-              <h1 className="text-2xl font-bold mb-4">未找到该工具内容</h1>
-              <p className="text-gray-500">请求的工具文档 "{slug}" 不存在。</p>
+          <div className="min-h-screen bg-background flex flex-col items-center justify-center text-center p-6 transition-colors duration-300">
+              <h1 className="text-2xl font-bold mb-4 text-foreground">未找到该工具内容</h1>
+              <p className="text-muted-foreground">请求的工具文档 "{slug}" 不存在。</p>
+              <Link to="/ai-tools" className="mt-6 text-primary hover:underline">返回工具列表</Link>
           </div>
       )
   }
 
   return (
-    <div className="container mx-auto py-10 px-6 max-w-4xl">
-      <div className="mb-8 border-b pb-8">
-        <div className="flex flex-col gap-4">
-            <div className="flex gap-2">
-                {frontmatter.category && <Badge>{frontmatter.category}</Badge>}
-                {frontmatter.toolType && <Badge variant="workflow">{frontmatter.toolType}</Badge>}
+    <div className="min-h-screen bg-background transition-colors duration-300">
+        <div className="container mx-auto py-10 px-6 max-w-4xl">
+            <Link to="/ai-tools" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                返回工具列表
+            </Link>
+
+            <div className="mb-8 border-b border-border pb-8">
+                <div className="flex flex-col gap-4">
+                    <div className="flex gap-2">
+                        {frontmatter.category && <Badge variant="secondary">{frontmatter.category}</Badge>}
+                        {frontmatter.toolType && <Badge variant="workflow">{frontmatter.toolType}</Badge>}
+                    </div>
+                    <h1 className="text-4xl font-bold text-foreground">{frontmatter.title || slug}</h1>
+                    {frontmatter.description && (
+                        <p className="text-xl text-muted-foreground leading-relaxed">{frontmatter.description}</p>
+                    )}
+                    {frontmatter.publishDate && (
+                        <div className="text-sm text-muted-foreground/60 mt-2">
+                            发布于 {frontmatter.publishDate}
+                        </div>
+                    )}
+                </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900">{frontmatter.title || slug}</h1>
-            {frontmatter.description && (
-                <p className="text-xl text-gray-600 leading-relaxed">{frontmatter.description}</p>
-            )}
-            {frontmatter.publishDate && (
-                <div className="text-sm text-gray-500 mt-2">
-                    发布于 {frontmatter.publishDate}
+
+            {/* Interactive Tool Section */}
+            {slug === 'xiaohongshu' && (
+                <div className="mb-12">
+                     <XiaohongshuGenerator />
                 </div>
             )}
+            
+            <article className="prose prose-lg max-w-none text-foreground dark:prose-invert prose-headings:text-foreground prose-a:text-primary prose-strong:text-foreground prose-code:text-primary prose-pre:bg-muted prose-pre:text-muted-foreground">
+                <ReactMarkdown>{content}</ReactMarkdown>
+            </article>
         </div>
-      </div>
-
-      {/* Interactive Tool Section */}
-      {slug === 'xiaohongshu' && (
-        <XiaohongshuGenerator />
-      )}
-      
-      <article className="prose prose-indigo lg:prose-xl max-w-none">
-        <ReactMarkdown>{content}</ReactMarkdown>
-      </article>
     </div>
   );
 }

@@ -7,24 +7,69 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
   }
+ 
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 210 40% 98%;
+    --card: 0 0% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
 
+@layer base {
+  * {
+    @apply border-border;
+  }
   body {
-    @apply bg-white text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900;
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
   }
 }
 
 @layer components {
   .minimal-card {
-    @apply bg-white border border-slate-200 rounded-xl transition-all duration-200 hover:border-blue-200 hover:shadow-sm;
+    @apply bg-card border border-border rounded-xl transition-all duration-200 hover:border-primary/30 hover:shadow-sm glow-on-hover;
   }
 
   .primary-button {
-    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-blue-600 text-white font-medium transition-all hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50;
   }
 
   .secondary-button {
-    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-slate-50 text-slate-900 border border-slate-200 font-medium transition-all hover:bg-slate-100 active:scale-[0.98];
+    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-muted text-foreground border border-border font-medium transition-all hover:bg-accent hover:text-accent-foreground active:scale-[0.98];
   }
 }
 
@@ -32,11 +77,66 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bg-subtle-grid {
+    background-image: 
+      linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .dark .bg-subtle-grid {
+    background-image: 
+      linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+  }
+
+  /* Custom Scrollbar for Dark Mode */
+  .dark ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .dark ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 5px;
+    border: 2px solid #1a1a1a;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #444;
+  }
+
+  /* Reduce image brightness in dark mode to prevent eye strain */
+  .dark img:not(.no-dim) {
+    filter: brightness(0.85) contrast(1.1);
+    transition: filter 0.3s ease;
+  }
+  .dark img:hover {
+    filter: brightness(1) contrast(1);
+  }
+  /* Card Glow Effect for Dark Mode */
+  .dark .glow-on-hover:hover {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.3);
+    border-color: hsl(var(--primary) / 0.5);
+  }
+
+  /* Button Glow */
+  .dark .primary-button:hover {
+    box-shadow: 0 0 15px -3px hsl(var(--primary) / 0.5);
+  }
 }
 
 /* Rich Text Content Styles */
-.rich-text-content {
-  @apply text-gray-800 leading-relaxed;
+.rich-text-content,
+.rich-text-content * {
+  color: hsl(var(--foreground)) !important;
+  line-height: 1.625 !important;
 }
 
 .rich-text-content p {
@@ -50,7 +150,7 @@
 .rich-text-content h1, 
 .rich-text-content h2, 
 .rich-text-content h3 {
-  @apply font-bold text-gray-900 mt-8 mb-4;
+  @apply font-bold text-foreground mt-8 mb-4;
 }
 
 .rich-text-content h1 { @apply text-3xl; }
@@ -66,11 +166,11 @@
 }
 
 .rich-text-content a {
-  @apply text-blue-600 hover:underline;
+  @apply text-primary hover:underline;
 }
 
 .rich-text-content blockquote {
-  @apply border-l-4 border-gray-200 pl-4 italic text-gray-600 my-6;
+  @apply border-l-4 border-border pl-4 italic text-muted-foreground my-6;
 }
 
 .rich-text-content table {
@@ -79,9 +179,9 @@
 
 .rich-text-content th,
 .rich-text-content td {
-  @apply border border-gray-200 p-2 text-sm;
+  @apply border border-border p-2 text-sm;
 }
 
 .rich-text-content th {
-  @apply bg-gray-50 font-semibold;
+  @apply bg-muted font-semibold text-foreground;
 }

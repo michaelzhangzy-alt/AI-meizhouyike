@@ -27,7 +27,7 @@ export function NewsCarousel({ items }: NewsCarouselProps) {
   if (!items.length) return null;
 
   return (
-    <div className="relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-12 group shadow-2xl shadow-slate-200">
+    <div className="relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-12 group shadow-2xl shadow-primary/10">
       {/* Slides */}
       {items.map((item, index) => (
         <div
@@ -44,7 +44,7 @@ export function NewsCarousel({ items }: NewsCarouselProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
           
           <div className="absolute bottom-0 left-0 p-6 md:p-10 w-full md:w-2/3">
-            <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-white uppercase bg-blue-600 rounded-full">
+            <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-white uppercase bg-primary rounded-full">
               {item.category}
             </span>
             <h2 className="text-2xl md:text-4xl font-bold text-white leading-tight mb-2 drop-shadow-sm">
@@ -75,7 +75,7 @@ export function NewsCarousel({ items }: NewsCarouselProps) {
             key={index}
             onClick={() => setCurrent(index)}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === current ? 'w-6 bg-blue-500' : 'bg-white/50 hover:bg-white'
+              index === current ? 'w-6 bg-primary' : 'bg-white/50 hover:bg-white'
             }`}
           />
         ))}

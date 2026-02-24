@@ -18,17 +18,32 @@ export default function CourseEditor() {
   const [cropperOpen, setCropperOpen] = useState(false);
   const [cropperImage, setCropperImage] = useState<string>('');
 
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     title: '',
     description: '',
     content: '',
     instructor: '',
     schedule_time: '',
     location: '',
-    status: 'draft',
-    cover_image: ''
+    status: 'draft', // draft | published | archived
+    cover_image: '',
+    series_id: ''
   });
 
+  const [seriesList, setSeriesList] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Fetch series list
+    const fetchSeries = async () => {
+      const { data } = await supabase
+        .from('course_series')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order');
+      if (data) setSeriesList(data);
+    };
+    fetchSeries();
+  }, []);
   const [initialData, setInitialData] = useState<any>(null);
 
   useEffect(() => {
@@ -173,6 +188,20 @@ export default function CourseEditor() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">所属系列</label>
+            <select
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={formData.series_id || ''}
+              onChange={(e) => setFormData({...formData, series_id: e.target.value})}
+            >
+              <option value="">未归类</option>
+              {seriesList.map(series => (
+                <option key={series.id} value={series.id}>{series.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">课程标题</label>
               <Input
                 required

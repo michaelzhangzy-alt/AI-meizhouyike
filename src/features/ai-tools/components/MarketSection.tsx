@@ -25,21 +25,21 @@ export function MarketSection() {
       <div className="container mx-auto px-6">
         <div className="mb-8 flex flex-col items-end justify-between gap-4 md:flex-row">
           <div>
-            <h2 className="mb-4 text-2xl font-bold text-gray-900">市场精选工具</h2>
-            <div className="inline-flex rounded-xl bg-gray-100 p-1">
+            <h2 className="mb-4 text-2xl font-bold text-foreground">市场精选工具</h2>
+            <div className="inline-flex rounded-xl bg-muted p-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
                     "relative rounded-lg px-5 py-2 text-sm font-semibold transition-colors outline-none",
-                    activeTab === tab.id ? "text-gray-900" : "text-gray-500 hover:text-gray-900"
+                    activeTab === tab.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {activeTab === tab.id && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 rounded-lg bg-white shadow-sm"
+                      className="absolute inset-0 rounded-lg bg-background shadow-sm"
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
@@ -49,11 +49,11 @@ export function MarketSection() {
             </div>
           </div>
 
-          <div className="flex gap-4 text-sm text-gray-500">
-            <button className="flex items-center gap-1 hover:text-gray-900">
+          <div className="flex gap-4 text-sm text-muted-foreground">
+            <button className="flex items-center gap-1 hover:text-foreground">
               筛选: 全部类型 <span className="text-xs">▼</span>
             </button>
-            <button className="flex items-center gap-1 hover:text-gray-900">
+            <button className="flex items-center gap-1 hover:text-foreground">
               排序: 推荐 <span className="text-xs">▼</span>
             </button>
           </div>
@@ -62,23 +62,23 @@ export function MarketSection() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {currentTools.map((tool) => {
             const CardContent = (
-              <Card className="h-full p-6 hover:shadow-lg hover:border-indigo-100 transition-all cursor-pointer group relative">
+              <Card className="h-full p-6 hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group relative border-border bg-card">
                  {tool.isExternal && (
                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ExternalLink className="w-4 h-4 text-gray-400" />
+                        <ExternalLink className="w-4 h-4 text-muted-foreground" />
                     </div>
                  )}
                 <div className="mb-4 flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gray-50 text-2xl">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-muted text-2xl">
                     {tool.icon}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{tool.title}</h3>
-                    <span className="text-xs font-medium text-gray-500">{tool.category}</span>
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">{tool.title}</h3>
+                    <span className="text-xs font-medium text-muted-foreground">{tool.category}</span>
                   </div>
                 </div>
-                <p className="mb-4 line-clamp-2 text-sm text-gray-500 min-h-[40px]">{tool.desc}</p>
-                <Badge variant="default">{tool.tag}</Badge>
+                <p className="mb-4 line-clamp-2 text-sm text-muted-foreground min-h-[40px]">{tool.desc}</p>
+                <Badge variant="default" className="bg-primary text-primary-foreground">{tool.tag}</Badge>
               </Card>
             );
 
