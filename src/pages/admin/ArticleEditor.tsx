@@ -269,13 +269,26 @@ export default function ArticleEditor() {
               </div>
             </>
           ) : (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">正文内容</label>
-              <RichTextEditor
-                value={formData.content}
-                onChange={(content) => setFormData({...formData, content: content})}
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                 <label className="text-sm font-medium text-gray-700">原文链接 (可选)</label>
+                 <Input
+                   value={formData.external_url || ''}
+                   onChange={(e) => setFormData({...formData, external_url: e.target.value})}
+                   placeholder="如果这是发布在公众号/小红书的文章，请在此粘贴链接"
+                 />
+                 <p className="text-xs text-gray-500">
+                   填写此项后，详情页将显示“阅读全文”按钮跳转至该链接。正文内容可作为摘要或简短介绍。
+                 </p>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">正文内容</label>
+                <RichTextEditor
+                  value={formData.content}
+                  onChange={(content) => setFormData({...formData, content: content})}
+                />
+              </div>
+            </>
           )}
           
           <div className="space-y-2">

@@ -173,14 +173,32 @@ export default function NewsDetail() {
                  ) : (
                    <div 
                      className="rich-text-content"
-                     dangerouslySetInnerHTML={{ 
+                   >
+                     {article.external_url && article.type === 'original' && (
+                        <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 mb-8 text-center">
+                            <p className="text-muted-foreground mb-4">
+                                本文首发于其他平台，点击下方按钮阅读完整内容
+                            </p>
+                            <a 
+                                href={article.external_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-medium transition-colors shadow-sm group"
+                            >
+                                前往阅读全文
+                                <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                            </a>
+                        </div>
+                     )}
+
+                     <div dangerouslySetInnerHTML={{ 
                        __html: DOMPurify.sanitize(article.content, {
                          ADD_TAGS: ['iframe', 'img', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'hr', 'ul', 'ol', 'li', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'blockquote', 'pre', 'code', 'a', 'b', 'strong', 'i', 'em', 'u', 's', 'strike', 'sub', 'sup', 'font'],
                          ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'width', 'height', 'style', 'class', 'id', 'data-page-id', 'data-id', 'align', 'color', 'bgcolor', 'border', 'cellpadding', 'cellspacing', 'target', 'href', 'title', 'alt'],
                          WHOLE_DOCUMENT: false,
                        }) 
-                     }} 
-                   />
+                     }} />
+                   </div>
                  )}
               </div>
             </article>

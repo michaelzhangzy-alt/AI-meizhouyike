@@ -30,11 +30,22 @@ export default function WeeklyClass() {
   const fetchCourses = async () => {
     try {
       setLoading(true);
+      
+      // Calculate date range: 30 days past + 60 days future
+      const now = new Date();
+      const pastDate = new Date(now);
+      pastDate.setDate(now.getDate() - 14); // Optimized: Only fetch last 2 weeks
+      const futureDate = new Date(now);
+      futureDate.setDate(now.getDate() + 30); // Optimized: Only fetch next 1 month
+
       const { data, error } = await supabase
         .from('courses')
-        .select('*')
+        .select('id, title, description, cover_image, instructor, schedule_time, location, status')
         .eq('status', 'published')
-        .order('schedule_time', { ascending: true }); // Ascending to show nearest future first
+        .gte('schedule_time', pastDate.toISOString()) // Filter older than 14 days
+        .lte('schedule_time', futureDate.toISOString()) // Filter future beyond 30 days
+        .order('schedule_time', { ascending: true })
+        .limit(10); // Hard limit to prevent data explosion
 
       if (error) throw error;
       setCourses(data || []);
@@ -57,6 +68,7 @@ export default function WeeklyClass() {
         <img 
           src={course.cover_image} 
           alt={course.title} 
+          loading="lazy"
           className="w-full h-full object-cover"
         />
         {isPast && (

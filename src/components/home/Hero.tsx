@@ -59,7 +59,7 @@ export function Hero({ onRegister }: HeroProps) {
               </span>
               <span className="font-bold text-foreground">1,203 位同学</span>
             </div>
-            <p className="text-muted-foreground text-xs">本周已报名学习</p>
+            <p className="text-muted-foreground text-xs">本月已报名学习</p>
           </div>
         </div>
 

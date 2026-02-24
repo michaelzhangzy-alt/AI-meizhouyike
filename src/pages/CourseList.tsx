@@ -18,47 +18,110 @@ interface Course {
   location: string;
 }
 
+import { useCacheStore, isCacheValid } from '../store/useCacheStore';
+
 export default function CourseList() {
+  const { courses: coursesCache, setCoursesCache } = useCacheStore();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
+  const [selectedSeries, setSelectedSeries] = useState<string>('all');
+  const [seriesList, setSeriesList] = useState<any[]>([]);
+
   useEffect(() => {
-    fetchCourses();
+    // Fetch series
+    const fetchSeries = async () => {
+      const { data } = await supabase
+        .from('course_series')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order');
+      if (data) setSeriesList(data);
+    };
+    fetchSeries();
   }, []);
 
-  const fetchCourses = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  useEffect(() => {
+    const fetchCourses = async () => {
+      // Use cache if default filters
+      if (sortOrder === 'desc' && selectedSeries === 'all' && isCacheValid(coursesCache)) {
+        setCourses(coursesCache!.data);
+        setLoading(false);
+        return;
+      }
 
-      // Fetch all published courses, ordered by date descending (newest first)
-      const query = supabase
-        .from('courses')
-        .select('id, title, description, cover_image, instructor, schedule_time, location')
-        .eq('status', 'published')
-        .order('schedule_time', { ascending: false });
+      try {
+        setLoading(true);
+        setError(null);
 
-      const { data, error } = await query;
+        let query = supabase
+          .from('courses')
+          .select('id, title, description, cover_image, instructor, schedule_time, location, series_id, status')
+          .eq('status', 'published')
+          .order('schedule_time', { ascending: sortOrder === 'asc' })
+          .limit(12);
 
-      if (error) throw error;
-      setCourses(data || []);
-    } catch (error: any) {
-      console.error('Error fetching courses:', error);
-      setError(error.message || '加载失败');
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (selectedSeries !== 'all') {
+           if (selectedSeries === 'uncategorized') {
+             query = query.is('series_id', null);
+           } else {
+             query = query.eq('series_id', selectedSeries);
+           }
+        }
+
+        const { data, error } = await query;
+
+        if (error) throw error;
+        setCourses(data || []);
+        
+        // Cache if default filters
+        if (sortOrder === 'desc' && selectedSeries === 'all') {
+            setCoursesCache(data || []);
+        }
+      } catch (error: any) {
+        console.error('Error fetching courses:', error);
+        setError(error.message || '加载失败');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, [sortOrder, selectedSeries]);
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
       <SEO title="往期课程回放 - 优尼克斯教育" description="浏览优尼克斯教育往期精彩AI公开课回放与资料" />
       
-      <main className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">往期精彩课程</h1>
-          <p className="text-xl text-muted-foreground">错过直播不要紧，回放内容同样精彩</p>
+      <main className="container mx-auto px-4 py-8 md:py-12">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+          <h1 className="text-3xl font-bold tracking-tight">往期课程回放</h1>
+          
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <select
+              className="px-3 py-2 rounded-lg border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              value={selectedSeries}
+              onChange={(e) => setSelectedSeries(e.target.value)}
+            >
+              <option value="all">全部系列</option>
+              <option value="uncategorized">未归类</option>
+              {seriesList.length > 0 && <option disabled>──────────</option>}
+              {seriesList.map(series => (
+                <option key={series.id} value={series.id}>{series.name}</option>
+              ))}
+            </select>
+
+            <select
+              className="px-3 py-2 rounded-lg border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+            >
+              <option value="desc">最新优先</option>
+              <option value="asc">最早优先</option>
+            </select>
+          </div>
         </div>
 
         {loading ? (
@@ -97,6 +160,7 @@ export default function CourseList() {
                         <img 
                         src={course.cover_image || placeholderImage} 
                         alt={course.title}
+                        loading="lazy"
                         className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">

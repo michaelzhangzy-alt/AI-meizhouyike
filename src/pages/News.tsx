@@ -18,7 +18,10 @@ interface Article {
   external_url?: string;
 }
 
+import { useCacheStore, isCacheValid } from '../store/useCacheStore';
+
 export default function News() {
+  const { news, setNewsCache } = useCacheStore();
   const [articles, setArticles] = useState<Article[]>([]);
   const [featuredArticles, setFeaturedArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +54,13 @@ export default function News() {
 
   useEffect(() => {
     const fetchArticles = async () => {
+      // Check cache first if no filter applied
+      if (filterType === 'all' && isCacheValid(news)) {
+        setArticles(news!.data);
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
@@ -61,7 +71,7 @@ export default function News() {
           .select('id, title, summary, cover_image, created_at, type, external_url')
           .eq('status', 'published')
           .order('created_at', { ascending: false })
-          .limit(50);
+          .limit(12);
 
         if (filterType !== 'all') {
           query = query.eq('type', filterType);
@@ -71,6 +81,11 @@ export default function News() {
 
         if (error) throw error;
         setArticles(data || []);
+        
+        // Update cache if no filter
+        if (filterType === 'all') {
+          setNewsCache(data || []);
+        }
 
       } catch (error: any) {
         console.error('Error fetching news:', error);

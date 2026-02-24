@@ -334,7 +334,7 @@ export default function ConsoleUI() {
                         
                         <div className="relative mt-1 md:mt-4 scale-[0.6] md:scale-100 origin-center">
                             <span className="absolute -top-6 md:-top-8 left-1/2 -translate-x-1/2 text-[8px] md:text-[10px] text-gray-500 w-24 text-center leading-tight font-bold whitespace-nowrap hidden md:block">R-STICK<br/>点击切换主题</span>
-                            <Joystick onClick={toggleTheme} />
+                            <Joystick onClick={toggleTheme} onMove={toggleTheme} />
                         </div>
                     </div>
                 </div>

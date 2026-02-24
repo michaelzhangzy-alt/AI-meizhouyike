@@ -148,7 +148,7 @@ export function FeaturedContent() {
                 {courses.map(course => (
                   <Link key={course.id} to={`/courses/${course.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-muted/50 transition-colors">
                     <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border">
-                      <img src={course.cover_image} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src={course.cover_image} alt={course.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="flex flex-col justify-center">
                       <h3 className="font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors mb-2">
@@ -183,7 +183,7 @@ export function FeaturedContent() {
                 {articles.map(article => (
                   <Link key={article.id} to={`/news/${article.id}`} className="flex gap-5 group p-2 -m-2 rounded-xl hover:bg-muted/50 transition-colors">
                     <div className="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border">
-                       <img src={article.cover_image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                       <img src={article.cover_image} alt={article.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="flex flex-col justify-center">
                       <h3 className="font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors mb-2">
