@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { usePublicLayoutContext } from '../components/layout/PublicLayout';
@@ -43,53 +43,53 @@ export default function CourseList() {
     fetchSeries();
   }, []);
 
+  const fetchCourses = useCallback(async () => {
+    // Use cache if default filters
+    if (sortOrder === 'desc' && selectedSeries === 'all' && isCacheValid(coursesCache)) {
+      setCourses(coursesCache!.data);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      let query = supabase
+        .from('courses')
+        .select('id, title, description, cover_image, instructor, schedule_time, location, series_id, status')
+        .eq('status', 'published')
+        .order('schedule_time', { ascending: sortOrder === 'asc' })
+        .limit(12);
+
+      if (selectedSeries !== 'all') {
+          if (selectedSeries === 'uncategorized') {
+            query = query.is('series_id', null);
+          } else {
+            query = query.eq('series_id', selectedSeries);
+          }
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      setCourses(data || []);
+      
+      // Cache if default filters
+      if (sortOrder === 'desc' && selectedSeries === 'all') {
+          setCoursesCache(data || []);
+      }
+    } catch (error: any) {
+      console.error('Error fetching courses:', error);
+      setError(error.message || '加载失败');
+    } finally {
+      setLoading(false);
+    }
+  }, [sortOrder, selectedSeries, coursesCache, setCoursesCache]);
+
   useEffect(() => {
-    const fetchCourses = async () => {
-      // Use cache if default filters
-      if (sortOrder === 'desc' && selectedSeries === 'all' && isCacheValid(coursesCache)) {
-        setCourses(coursesCache!.data);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        let query = supabase
-          .from('courses')
-          .select('id, title, description, cover_image, instructor, schedule_time, location, series_id, status')
-          .eq('status', 'published')
-          .order('schedule_time', { ascending: sortOrder === 'asc' })
-          .limit(12);
-
-        if (selectedSeries !== 'all') {
-           if (selectedSeries === 'uncategorized') {
-             query = query.is('series_id', null);
-           } else {
-             query = query.eq('series_id', selectedSeries);
-           }
-        }
-
-        const { data, error } = await query;
-
-        if (error) throw error;
-        setCourses(data || []);
-        
-        // Cache if default filters
-        if (sortOrder === 'desc' && selectedSeries === 'all') {
-            setCoursesCache(data || []);
-        }
-      } catch (error: any) {
-        console.error('Error fetching courses:', error);
-        setError(error.message || '加载失败');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCourses();
-  }, [sortOrder, selectedSeries]);
+  }, [fetchCourses]);
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
