@@ -1,7 +1,8 @@
 
 console.log("Starting Chat-Coze STATIC V2 Version...");
 
-Deno.serve(async (req) => {
+// @ts-ignore
+Deno.serve(async (req: Request) => {
   // 1. 处理 CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', {

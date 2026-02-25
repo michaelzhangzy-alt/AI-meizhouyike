@@ -119,13 +119,10 @@ export function LeadModal({ isOpen, onClose, source, interestedCourse }: LeadMod
                 <div className="p-2 bg-white rounded-lg shadow-sm border relative">
                      {/* Placeholder QR Code - In production, this should be dynamic */}
                      <img 
-                        src="https://api.dicebear.com/9.x/icons/svg?seed=QRCode&backgroundColor=transparent" 
+                        src={qrInfo?.imageUrl || "/wechat-qr.png"} 
                         alt="Assistant QR" 
-                        className="w-48 h-48 object-cover opacity-50" 
+                        className="w-48 h-48 object-cover" 
                      />
-                     <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm text-gray-500 font-bold rotate-12">（此处配置企业微信二维码）</span>
-                     </div>
                 </div>
             </div>
             <div className="text-sm text-gray-500 bg-gray-50 p-2 rounded">

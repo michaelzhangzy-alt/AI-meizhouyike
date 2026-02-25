@@ -3,7 +3,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 
 console.log("Hello from Functions!")
 
-Deno.serve(async (req) => {
+// @ts-ignore
+Deno.serve(async (req: Request) => {
   // 1. 处理 CORS (跨域请求)
   if (req.method === 'OPTIONS') {
     return new Response('ok', {
@@ -24,6 +25,7 @@ Deno.serve(async (req) => {
 
     // 3. 准备调用 AI API
     // 优先从环境变量获取，如果未设置则使用默认 key (注意：实际生产环境请务必使用环境变量)
+    // @ts-ignore
     const API_KEY = Deno.env.get('SILICONFLOW_API_KEY') || 'sk-uuriupdoksavucfemlmcagzqbgqgzwvkvemvwxwoxxocgqvq'
     const API_URL = 'https://api.siliconflow.cn/v1/chat/completions'
 
@@ -77,7 +79,7 @@ Deno.serve(async (req) => {
         },
       },
     )
-  } catch (error) {
+  } catch (error: any) {
     return new Response(
       JSON.stringify({ error: error.message }),
       {
